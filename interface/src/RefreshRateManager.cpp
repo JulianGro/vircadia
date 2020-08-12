@@ -93,7 +93,7 @@ static const std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM> 
     { { 60, 60, 60, 2, 30, 30} };
 
 static const std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM> UNLIMITED_PROFILE =
-    { { 0, 0, 0, 2, 30, 30} };
+    { { 40000, 40000, 40000, 2, 30, 30} };
 
 static const std::array<std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM>, RefreshRateManager::RefreshRateProfile::PROFILE_NUM> REFRESH_RATE_PROFILES =
     { { ECO_PROFILE, INTERACTIVE_PROFILE, REALTIME_PROFILE, UNLIMITED_PROFILE } };
