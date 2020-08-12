@@ -44,10 +44,10 @@ public:
      *     <tr><th>Value</th><th>Name</th><th>Description</th>
      *   </thead>
      *   <tbody>
-     *     <tr><td><code>0</code></td><td>UNKNOWN</td><td>Custom settings of world detail, rendering effects, and refresh 
+     *     <tr><td><code>0</code></td><td>UNKNOWN</td><td>Custom settings of world detail, rendering effects, and refresh
      *       rate.</td></tr>
      *     <tr><td><code>1</code></td><td>LOW</td><td>Low world detail, no rendering effects, lo refresh rate.</td></tr>
-     *     <tr><td><code>2</code></td><td>MID</td><td>Medium world detail, some rendering effects, medium refresh 
+     *     <tr><td><code>2</code></td><td>MID</td><td>Medium world detail, some rendering effects, medium refresh
      *       rate.</td></tr>
      *     <tr><td><code>3</code></td><td>HIGH</td><td>Maximum world detail, all rendering effects, high refresh rate.</td></tr>
      *   </tbody>
@@ -70,12 +70,10 @@ public:
      *     <tr><th>Value</th><th>Name</th><th>Description</th>
      *   </thead>
      *   <tbody>
-     *     <tr><td><code>0</code></td><td>ECO</td><td>Low refresh rate, which is reduced when Interface doesn't have focus or 
-     *       is minimized.</td></tr>
-     *     <tr><td><code>1</code></td><td>INTERACTIVE</td><td>Medium refresh rate, which is reduced when Interface doesn't have 
-     *       focus or is minimized.</td></tr>
-     *     <tr><td><code>2</code></td><td>REALTIME</td><td>High refresh rate, even when Interface doesn't have focus or is 
-     *       minimized. </td></tr>
+     *     <tr><td><code>0</code></td><td>ECO</td><td>Low refresh rate, which is reduced when Interface doesn't have focus or is minimized.</td></tr>
+     *     <tr><td><code>1</code></td><td>INTERACTIVE</td><td>Medium refresh rate, which is reduced when Interface doesn't have focus or is minimized.</td></tr>
+     *     <tr><td><code>2</code></td><td>REALTIME</td><td>High refresh rate, even when Interface doesn't have focus. Reduced when interface is minimized. </td></tr>
+     *     <tr><td><code>2</code></td><td>UNLIMITED</td><td>High refresh rate, even when Interface doesn't have focus. Reduced when interface is minimized. </td></tr>
      *   </tbody>
      * </table>
      * @typedef {number} Performance.RefreshRateProfile
@@ -85,6 +83,7 @@ public:
         ECO = RefreshRateManager::RefreshRateProfile::ECO,
         INTERACTIVE = RefreshRateManager::RefreshRateProfile::INTERACTIVE,
         REALTIME = RefreshRateManager::RefreshRateProfile::REALTIME,
+        UNLIMITED = RefreshRateManager::RefreshRateProfile::UNLIMITED
     };
     Q_ENUM(RefreshRateProfile)
 
@@ -110,7 +109,7 @@ public slots:
     /**jsdoc
      * Gets the names of the graphics performance presets.
      * @function Performance.getPerformancePresetNames
-     * @returns {string[]} The names of the graphics performance presets. The array index values correspond to 
+     * @returns {string[]} The names of the graphics performance presets. The array index values correspond to
      *     {@link Performance.PerformancePreset} values.
      */
     QStringList getPerformancePresetNames() const;
@@ -133,14 +132,14 @@ public slots:
     /**jsdoc
      * Gets the names of the refresh rate profiles.
      * @function Performance.getRefreshRateProfileNames
-     * @returns {string[]} The names of the refresh rate profiles. The array index values correspond to 
+     * @returns {string[]} The names of the refresh rate profiles. The array index values correspond to
      *     {@link Performance.RefreshRateProfile} values.
      */
     QStringList getRefreshRateProfileNames() const;
 
 
     /**jsdoc
-     * Gets the current target refresh rate, in Hz, per the current refresh rate profile and refresh rate regime if in desktop 
+     * Gets the current target refresh rate, in Hz, per the current refresh rate profile and refresh rate regime if in desktop
      * mode; a higher rate if in VR mode.
      * @function Performance.getActiveRefreshRate
      * @returns {number} The current target refresh rate, in Hz.

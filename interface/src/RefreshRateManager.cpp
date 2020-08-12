@@ -96,7 +96,7 @@ static const std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM> 
     { { 0, 0, 0, 2, 30, 30} };
 
 static const std::array<std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM>, RefreshRateManager::RefreshRateProfile::PROFILE_NUM> REFRESH_RATE_PROFILES =
-    { { ECO_PROFILE, INTERACTIVE_PROFILE, REALTIME_PROFILE } };
+    { { ECO_PROFILE, INTERACTIVE_PROFILE, REALTIME_PROFILE, UNLIMITED_PROFILE } };
 
 
 static const int INACTIVE_TIMER_LIMIT = 3000;
