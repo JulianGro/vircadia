@@ -24,17 +24,18 @@ static const int VR_TARGET_RATE = 90;
  *     <tr><th>Value</th><th>Description</th></tr>
  *   </thead>
  *   <tbody>
- *     <tr><td><code>"Eco"</code></td><td>Low refresh rate, which is reduced when Interface doesn't have focus or is 
+ *     <tr><td><code>"Eco"</code></td><td>Low refresh rate, which is reduced when Interface doesn't have focus or is
  *         minimized.</td></tr>
- *     <tr><td><code>"Interactive"</code></td><td>Medium refresh rate, which is reduced when Interface doesn't have focus or is 
+ *     <tr><td><code>"Interactive"</code></td><td>Medium refresh rate, which is reduced when Interface doesn't have focus or is
  *         minimized.</td></tr>
- *     <tr><td><code>"Realtime"</code></td><td>High refresh rate, even when Interface doesn't have focus or is minimized.
+ *     <tr><td><code>"Realtime"</code></td><td>High refresh rate, even when Interface doesn't have focus. Reduced when interface is minimized.</td></tr>
+ *     <tr><td><code>"Unlimited"</code></td><td>Maximum refresh rate, even when Interface doesn't have focus. Reduced when interface is minimized.
  *   </tbody>
  * </table>
  * @typedef {string} RefreshRateProfileName
  */
 static const std::array<std::string, RefreshRateManager::RefreshRateProfile::PROFILE_NUM> REFRESH_RATE_PROFILE_TO_STRING =
-    { { "Eco", "Interactive", "Realtime" } };
+    { { "Eco", "Interactive", "Realtime", "Unlimited" } };
 
 /**jsdoc
  * <p>Interface states that affect the refresh rate.</p>
@@ -75,7 +76,8 @@ static const std::array<std::string, RefreshRateManager::UXMode::UX_NUM> UX_MODE
 static const std::map<std::string, RefreshRateManager::RefreshRateProfile> REFRESH_RATE_PROFILE_FROM_STRING =
     { { "Eco", RefreshRateManager::RefreshRateProfile::ECO },
       { "Interactive", RefreshRateManager::RefreshRateProfile::INTERACTIVE },
-      { "Realtime", RefreshRateManager::RefreshRateProfile::REALTIME } };
+      { "Realtime", RefreshRateManager::RefreshRateProfile::REALTIME },
+      { "Unlimited", RefreshRateManager::RefreshRateProfile::UNLIMITED } };
 
 
 // Porfile regimes are:
@@ -89,6 +91,9 @@ static const std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM> 
 
 static const std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM> REALTIME_PROFILE =
     { { 60, 60, 60, 2, 30, 30} };
+
+static const std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM> UNLIMITED_PROFILE =
+    { { 0, 0, 0, 2, 30, 30} };
 
 static const std::array<std::array<int, RefreshRateManager::RefreshRateRegime::REGIME_NUM>, RefreshRateManager::RefreshRateProfile::PROFILE_NUM> REFRESH_RATE_PROFILES =
     { { ECO_PROFILE, INTERACTIVE_PROFILE, REALTIME_PROFILE } };
