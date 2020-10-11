@@ -244,7 +244,7 @@ Item {
                     source: InputConfiguration.configurationLayout(box.textAt(box.currentIndex));
                     onLoaded: {
                         if (loader.item.hasOwnProperty("pluginName")) {
-                            if (box.textAt(box.currentIndex) === "HTC Vive" || box.textAt(box.currentIndex) === "Valve Index") {
+                            if (box.textAt(box.currentIndex) === "HTC Vive" || box.textAt(box.currentIndex) === "Valve Index" || box.textAt(box.currentIndex) === "Valve" || box.textAt(box.currentIndex) === "Valve HMD") {
                                 loader.item.pluginName = "OpenVR";
                             } else {
                                 loader.item.pluginName = box.textAt(box.currentIndex);
@@ -298,7 +298,7 @@ Item {
                 loader.source = "";
                 var selectedDevice = box.textAt(box.currentIndex);
                 var source = "";
-                if (selectedDevice == "HTC Vive" || selectedDevice == "Valve Index") {
+                if (selectedDevice == "HTC Vive" || selectedDevice == "Valve Index" || selectedDevice == "Valve" || selectedDevice == "Valve HMD") {
                     source = InputConfiguration.configurationLayout("OpenVR");
                 } else {
                     source = InputConfiguration.configurationLayout(selectedDevice);
