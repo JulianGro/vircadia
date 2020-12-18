@@ -41,7 +41,20 @@ endif()
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/_env/EXTERNAL_BUILD_ASSETS.txt" "${EXTERNAL_BUILD_ASSETS}")
 MESSAGE(STATUS "EXTERNAL_BUILD_ASSETS: ${EXTERNAL_BUILD_ASSETS}")
 
+# read USE_GLES enviroment variable and sets it as GLES option
+# TODO still gets overwritten by "use GLES on linux aarch64"
 set(GLES_OPTION "$ENV{USE_GLES}")
+
+# Get Linux architecture
+if (CMAKE_SYSTEM_NAME="Linux")
+    EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
+    message(STATUS "Architecture: ${ARCHITECTURE}")
+endif()
+
+# use GLES on linux aarch64
+if (CMAKE_SYSTEM_NAME="Linux" AND ARCHITECTURE="aarch64")
+    set(GLES_OPTION ON)
+endif()
 
 # Will affect VCPKG dependencies
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/_env/USE_GLES.txt" "${GLES_OPTION}")
