@@ -216,7 +216,7 @@ endif()
         self.copyEnv()
 
     def run(self, commands):
-        if 'Linux' == system and 'aarch64' == machine:
+        if 'Linux' == platform.system() and 'aarch64' == platform.machine():
             actualCommands = ['VCPKG_FORCE_SYSTEM_BINARIES=1 ', self.exe, '--vcpkg-root', self.path]
         else:
             actualCommands = [self.exe, '--vcpkg-root', self.path]
