@@ -13,6 +13,8 @@ macro(TARGET_WEBRTC)
         # set(WEBRTC_LIBRARY_DEBUG ${INSTALL_DIR}/debug/lib/libwebrtc.a)
         # set(WEBRTC_LIBRARY_RELEASE ${INSTALL_DIR}/lib/libwebrtc.a)
         # select_library_configurations(WEBRTC)
+    elseif (UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+        # no libwebrtc for aarch64 yet
     else()
         set(WEBRTC_INCLUDE_DIRS "${VCPKG_INSTALL_ROOT}/include/webrtc")
         target_include_directories(${TARGET_NAME} SYSTEM PUBLIC ${WEBRTC_INCLUDE_DIRS})
