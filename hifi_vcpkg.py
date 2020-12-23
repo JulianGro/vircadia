@@ -216,11 +216,14 @@ endif()
         self.copyEnv()
 
     def run(self, commands):
-        actualCommands = [self.exe, '--vcpkg-root', self.path]
+        if 'Linux' == system and 'aarch64' == machine:
+            actualCommands = ['VCPKG_FORCE_SYSTEM_BINARIES=1 ', self.exe, '--vcpkg-root', self.path]
+        else
+            actualCommands = [self.exe, '--vcpkg-root', self.path]
         actualCommands.extend(commands)
         print("Running command")
         print(actualCommands)
-        hifi_utils.executeSubprocess('VCPKG_FORCE_SYSTEM_BINARIES=1 ', actualCommands, folder=self.path, env=self.buildEnv)
+        hifi_utils.executeSubprocess( actualCommands, folder=self.path, env=self.buildEnv)
 
     def copyTripletForBuildType(self, triplet):
         print('Copying triplet ' + triplet + ' to have build type ' + self.vcpkgBuildType)
