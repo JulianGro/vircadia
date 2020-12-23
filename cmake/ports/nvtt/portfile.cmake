@@ -19,7 +19,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         # FIXME
-        BUILD_SQUISH_WITH_SSE2=0
+        -DBUILD_SQUISH_WITH_SSE2=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
 )
