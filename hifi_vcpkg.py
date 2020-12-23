@@ -218,7 +218,7 @@ endif()
     def run(self, commands):
         if 'Linux' == system and 'aarch64' == machine:
             actualCommands = ['VCPKG_FORCE_SYSTEM_BINARIES=1 ', self.exe, '--vcpkg-root', self.path]
-        else
+        else:
             actualCommands = [self.exe, '--vcpkg-root', self.path]
         actualCommands.extend(commands)
         print("Running command")
