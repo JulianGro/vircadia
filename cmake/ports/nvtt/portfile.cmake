@@ -9,9 +9,9 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO JulianGro/nvidia-texture-tools
-#    REF d423410d5c723371e1a5890c71da3abb0f47789c
-#    SHA512 c66f01ca5ee551d0168418a389a5d4ce9fc29f950a23e8a7cdd1c15667c678aa0655457382864118d0f63900fccf12ebead34189636ffbef9122d39f257db6d5
+    REPO vircadia/nvidia-texture-tools
+    REF 330c4d56274a0f602a5c70596e2eb670a4ed56c2
+    SHA512 4c0bc2f369120d696cc27710b6d33086b27eef55f537ec66b9a5c8b1839bc2426c0413670b0f65be52c5d353468f0126dfe024be1f0690611d4d7e33ac530127
     HEAD_REF master
 )
 
