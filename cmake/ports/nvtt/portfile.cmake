@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JulianGro/nvidia-texture-tools
     REF cb592d8e46b613c6a9d627196c33b7c07aed24bf
-    SHA512 13cf04a9856f150f7569c8c256c42fc6a5bc40586c9ca2b3ae553edf5bfcbccbba5b8538924079ed35effdd07b9e3ef4bfdb9733a2ec51f5a95f958885cc6cca
+    SHA512 c66f01ca5ee551d0168418a389a5d4ce9fc29f950a23e8a7cdd1c15667c678aa0655457382864118d0f63900fccf12ebead34189636ffbef9122d39f257db6d5
     HEAD_REF master
 )
 
