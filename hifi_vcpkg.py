@@ -31,10 +31,6 @@ if(NOT (CMAKE_TOOLCHAIN_FILE_UNCACHED STREQUAL CMAKE_TOOLCHAIN_FILE))
 endif()
 """
 
-if 'Linux' == platform.system() and 'aarch64' == platform.machine():
-    os.environ('VCPKG_FORCE_SYSTEM_BINARIES') = 1
-    return
-
     def __init__(self, args):
         self.args = args
         # our custom ports, relative to the script location
