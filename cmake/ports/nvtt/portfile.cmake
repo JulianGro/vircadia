@@ -18,6 +18,8 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        # FIXME
+        BUILD_SQUISH_WITH_SSE2=0
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
 )
