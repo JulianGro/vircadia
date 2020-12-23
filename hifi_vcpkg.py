@@ -31,6 +31,10 @@ if(NOT (CMAKE_TOOLCHAIN_FILE_UNCACHED STREQUAL CMAKE_TOOLCHAIN_FILE))
 endif()
 """
 
+if 'Linux' == platform.system() and 'aarch64' == platform.machine():
+    os.environ('VCPKG_FORCE_SYSTEM_BINARIES') = 1
+    return
+
     def __init__(self, args):
         self.args = args
         # our custom ports, relative to the script location
@@ -107,7 +111,6 @@ endif()
             if usePrebuilt:
                 self.prebuiltArchive = self.assets_url + "/dependencies/vcpkg/builds/vcpkg-osx.tgz%3FversionId=6JrIMTdvpBF3MAsjA92BMkO79Psjzs6Z"
         elif 'Linux' == system and 'aarch64' == machine:
-            os.environ('VCPKG_FORCE_SYSTEM_BINARIES') = 1
             self.exe = os.path.join(self.path, 'vcpkg')
             self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
             self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg-2020.11-1_aarch64_experimental.tar.gz'
