@@ -9,8 +9,8 @@ include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO castano/nvidia-texture-tools
-    REF b1a90f36013522b9e5a3a2197859b72188752e3f
+    REPO JulianGro/nvidia-texture-tools
+    REF cb592d8e46b613c6a9d627196c33b7c07aed24bf
     SHA512 13cf04a9856f150f7569c8c256c42fc6a5bc40586c9ca2b3ae553edf5bfcbccbba5b8538924079ed35effdd07b9e3ef4bfdb9733a2ec51f5a95f958885cc6cca
     HEAD_REF master
 )
@@ -18,9 +18,6 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # FIXME
-        -DBUILD_SQUISH_WITH_OPENMP=OFF
-        -DBUILD_SQUISH_WITH_SSE2=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
 )
