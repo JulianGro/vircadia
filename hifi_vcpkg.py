@@ -108,7 +108,7 @@ endif()
                 self.prebuiltArchive = self.assets_url + "/dependencies/vcpkg/builds/vcpkg-osx.tgz%3FversionId=6JrIMTdvpBF3MAsjA92BMkO79Psjzs6Z"
         elif 'Linux' == system and 'aarch64' == machine:
             self.exe = os.path.join(self.path, 'vcpkg')
-            self.bootstrapCmds = [ os.path.join('VCPKG_FORCE_SYSTEM_BINARIES=1 ', self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
+            self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
             self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg-2020.11-1_aarch64_experimental.tar.gz'
             self.vcpkgHash = 'e6e5b967cce9821bae402980b912d89e942a5769a4fa49d2973795bb5cba8c00f9c6dbd42457ac9bf54d31ab42ef592ce4fbd99ba3b57a993dac4900468d3b84'
             self.hostTriplet = 'arm64-linux'
@@ -220,7 +220,7 @@ endif()
         actualCommands.extend(commands)
         print("Running command")
         print(actualCommands)
-        hifi_utils.executeSubprocess(actualCommands, folder=self.path, env=self.buildEnv)
+        hifi_utils.executeSubprocess('VCPKG_FORCE_SYSTEM_BINARIES=1 ', actualCommands, folder=self.path, env=self.buildEnv)
 
     def copyTripletForBuildType(self, triplet):
         print('Copying triplet ' + triplet + ' to have build type ' + self.vcpkgBuildType)
