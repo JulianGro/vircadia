@@ -44,13 +44,14 @@ endif()
         self.assets_url = self.readVar('EXTERNAL_BUILD_ASSETS')
 
         # The noClean flag indicates we're doing weird dependency maintenance stuff
-        # i.e. we've got an explicit checkout of vcpkg and we don't want the script to 
-        # do stuff it might otherwise do.  It typically indicates that we're using our 
+        # i.e. we've got an explicit checkout of vcpkg and we don't want the script to
+        # do stuff it might otherwise do.  It typically indicates that we're using our
         # own git checkout of vcpkg and manually managing it
         self.noClean = False
 
         # OS dependent information
         system = platform.system()
+        machine = platform.machine()
 
         if 'HIFI_VCPKG_PATH' in os.environ:
             self.path = os.environ['HIFI_VCPKG_PATH']
@@ -105,6 +106,12 @@ endif()
             self.bootstrapEnv['CXXFLAGS'] = '-D_CTERMID_H_'
             if usePrebuilt:
                 self.prebuiltArchive = self.assets_url + "/dependencies/vcpkg/builds/vcpkg-osx.tgz%3FversionId=6JrIMTdvpBF3MAsjA92BMkO79Psjzs6Z"
+        elif 'Linux' == system and 'aarch64' == machine:
+            self.exe = os.path.join(self.path, 'vcpkg')
+            self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
+            self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg-2020.11-1_aarch64_experimental.tar.gz'
+            self.vcpkgHash = 'e6e5b967cce9821bae402980b912d89e942a5769a4fa49d2973795bb5cba8c00f9c6dbd42457ac9bf54d31ab42ef592ce4fbd99ba3b57a993dac4900468d3b84'
+            self.hostTriplet = 'arm64-linux'
         else:
             self.exe = os.path.join(self.path, 'vcpkg')
             self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
