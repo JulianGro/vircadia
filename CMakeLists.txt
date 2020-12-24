@@ -194,7 +194,7 @@ else ()
   set(PLATFORM_QT_COMPONENTS WebEngine Xml)
 endif ()
 
-if (USE_GLES AND (NOT ANDROID))
+if (USE_GLES AND (NOT ANDROID AND NOT UNIX))
   set(DISABLE_QML_OPTION ON)
 endif()
 
