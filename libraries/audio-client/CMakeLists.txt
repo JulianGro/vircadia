@@ -7,7 +7,7 @@ link_hifi_libraries(audio plugins)
 include_hifi_library_headers(shared)
 include_hifi_library_headers(networking)
 
-if (ANDROID)
+if (ANDROID OR CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 else ()
   target_webrtc()
 endif ()
