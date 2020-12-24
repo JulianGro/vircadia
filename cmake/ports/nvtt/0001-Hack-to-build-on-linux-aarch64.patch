@@ -1,0 +1,25 @@
+From 08d16267cc308302440d253a5f9c8cf63d40b720 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Julian=20Gro=C3=9F?= <firedefender1@googlemail.com>
+Date: Wed, 23 Dec 2020 07:19:43 +0100
+Subject: [PATCH] Hack to build on linux-aarch64
+
+---
+ src/nvcore/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/nvcore/CMakeLists.txt b/src/nvcore/CMakeLists.txt
+index c072360..4688ac6 100644
+--- a/src/nvcore/CMakeLists.txt
++++ b/src/nvcore/CMakeLists.txt
+@@ -3,7 +3,7 @@ PROJECT(nvcore)
+ SET(CORE_SRCS
+     nvcore.h
+     Array.h
+-    Debug.h Debug.cpp
++#    Debug.h Debug.cpp
+     DefsGnucDarwin.h
+     DefsGnucLinux.h
+     DefsGnucWin32.h
+-- 
+2.17.1
+
