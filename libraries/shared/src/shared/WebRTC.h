@@ -23,6 +23,8 @@
 // I don't yet have a working libwebrtc for android
 // #  define WEBRTC_ENABLED 1
 // #  define WEBRTC_POSIX 1
+#elif defined(Q_OS_LINUX) && defined(Q_PROCESSOR_ARM)
+// no libwebrtc for aarch64 yet
 #elif defined(Q_OS_LINUX)
 #  define WEBRTC_ENABLED 1
 #  define WEBRTC_POSIX 1
