@@ -45,8 +45,8 @@ MESSAGE(STATUS "EXTERNAL_BUILD_ASSETS: ${EXTERNAL_BUILD_ASSETS}")
 # TODO still gets overwritten by "use GLES on linux aarch64"
 set(GLES_OPTION "$ENV{USE_GLES}")
 
-# use GLES on linux aarch64
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+# use GLES on linux aarch64 if USE_GLES enviroment variable is missing
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" AND NOT "$ENV{USE_GLES}")
     set(GLES_OPTION ON)
 endif()
 
