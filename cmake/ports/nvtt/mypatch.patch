@@ -1,0 +1,13 @@
+diff --git a/src/nvcore/Debug.cpp b/src/nvcore/Debug.cpp
+index 9ab4525..e0abc44 100644
+--- a/src/nvcore/Debug.cpp
++++ b/src/nvcore/Debug.cpp
+@@ -1021,7 +1021,7 @@ void debug::dumpCallstack(MessageHandler *messageHandler, int callstackLevelsToS
+         writeStackTrace(trace, size, callstackLevelsToSkip + 1, lines);     // + 1 to skip the call to dumpCallstack
+ 
+         for (uint i = 0; i < lines.count(); i++) {
+-            messageHandler->log(lines[i], NULL);
++            messageHandler->log(lines[i], empty);
+             delete lines[i];
+         }
+     }
