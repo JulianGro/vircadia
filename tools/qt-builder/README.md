@@ -65,14 +65,14 @@ sudo apt build-dep qt5-default
 
 1.  git >= 1.6
 1.  python 2.7.x
-1.  gperf   
-1.  bison and flex   
-1.  pkg-config (needed for qtwebengine)   
-1.  OpenGL  
-1.  make  
-1.  g++   
-1.  dbus-1 (needed for qtwebengine)   
-1.  nss (needed for qtwebengine)  
+1.  gperf
+1.  bison and flex
+1.  pkg-config (needed for qtwebengine)
+1.  OpenGL
+1.  make
+1.  g++
+1.  dbus-1 (needed for qtwebengine)
+1.  nss (needed for qtwebengine)
 
 On Ubuntu based systems you can install all these dependencies with:
 ```bash
@@ -80,7 +80,7 @@ sudo apt install git python gperf flex bison pkg-config mesa-utils libgl1-mesa-d
 ```
 Make sure that python 2.7.x is the system standard by checking if `python --version` returns python 2.7.x
 
- 
+
 ### Mac
 1.  git >= 1.6  
 Check if needed `git --version`  
