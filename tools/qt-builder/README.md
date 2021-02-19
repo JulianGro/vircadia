@@ -176,12 +176,15 @@ make -j4
 make -j4 module-qtscript
 make -j4 module-qtwebengine
 make -j4 module-qtspeech
+make -j4 module-qtwebchannel
 make -j4 install
 cd qtwebengine
 make -j4 install
 cd ../qtscript
 make -j4 install
 cd ../qtspeech
+make -j4 install
+cd ../qtwebchannel
 make -j4 install
 ```
 
