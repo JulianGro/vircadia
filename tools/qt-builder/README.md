@@ -163,8 +163,9 @@ cd qt5-build
 ```
 
 ```bash
-../qt5/configure -force-debug-info -release -opensource -confirm-license -platform linux-g++-64 -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -no-warnings-are-errors -no-pch -no-egl -no-icu -prefix ../qt5-install
+../qt5/configure -force-debug-info -release -opensource -confirm-license -platform linux-g++-64 -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-egl -no-icu -prefix ../qt5-install
 ```
+You can accelerate the build process by installing some of the optional system dependencies.
 
 #### Make
 Replace `4` with the number of threads you want to use. Keep in mind that the QT build process uses a lot of memory. It is recommended to have at *least* 1,2 GiB per thread.
@@ -187,7 +188,7 @@ make -j4 install
 cd ../qtwebchannel
 make -j4 install
 ```
-
+If one of the make commands fails, running it a second time sometimes clears the issue.
 
 #### Fixing
 1.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
