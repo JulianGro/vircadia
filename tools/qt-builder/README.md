@@ -80,6 +80,7 @@ sudo apt install git python gperf flex bison pkg-config mesa-utils libgl1-mesa-d
 ```
 Make sure that python 2.7.x is the system standard by checking if `python --version` returns python 2.7.x
 
+Qt also provides a dependency list for some major Linux distributions here: https://wiki.qt.io/Building_Qt_5_from_Git#Linux.2FX11
 
 ### Mac
 1.  git >= 1.6  
@@ -162,14 +163,14 @@ mkdir qt5-build
 cd qt5-build
 ```
 
-* amd64
+amd64:
 ```bash
 ../qt5/configure -force-debug-info -release -opensource -confirm-license -platform linux-g++-64 -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-egl -no-icu -prefix ../qt5-install
 ```
 If libX11 or libGL aren't found, you will need to manually provide those locations. Search for `libX11.so` and `libGL.so` respectively and provide paths to their folders inside `qt5/qtbase/mkdspecs/linux-g++-64/qmake.conf`.
 On Ubuntu 18.04 both are in `/usr/lib/x86_64-linux-gnu`
 
-* aarch64
+aarch64:
 ```bash
 ../qt5/configure -force-debug-info -release -opensource -confirm-license -platform linux-g++ -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-icu -prefix ../qt5-install
 ```
