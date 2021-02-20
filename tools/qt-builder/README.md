@@ -179,7 +179,7 @@ You can accelerate the build process by installing some of the optional system d
 #### Make
 Replace `4` with the number of threads you want to use. Keep in mind that the QT build process uses a lot of memory. It is recommended to have at *least* 1,2 GiB per thread.
 Be warned that the qtwebengine build process ignores this setting and just uses your actual number of available threads instead. In my case it needed ~24GiB of memory for the build process.
-On some systems qtscript, qtwebengine and qtspeech will be build by `make` without you manually specifying it, while others require you to build modules individually.
+On some systems qtscript, qtwebengine, qtwebchannel and qtspeech will be build by `make` without you manually specifying it, while others require you to build modules individually.
 Check the folders of each needed module for binary files, to make sure that they have actually been built.
 ```bash
 make -j4
