@@ -91,7 +91,7 @@ endif()
                     u_minor = int( distro.minor_version() )
 
                     if u_major == 18:
-                        self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.12.3-ubuntu-16.04-with-symbols.tar.gz'
+                        self.qtUrl = 'http://motofckr9k.ddns.net/vircadia_packages/qt5-install-5.15.2-ubuntu-18.04-aarch64_test.tar.xz'
                     elif u_major > 19:
                         print("We don't support " + distro.name(pretty=True) + " on aarch64 yet. Perhaps consider helping us out?")
                         raise Exception('LINUX DISTRO IS NOT SUPPORTED YET!!!')
