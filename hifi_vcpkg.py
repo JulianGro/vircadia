@@ -110,7 +110,7 @@ endif()
             self.exe = os.path.join(self.path, 'vcpkg')
             self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
             self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg-2020.11-1_arm64.tar.xz'
-            self.vcpkgHash = '7a9e4bc785e83d6fc2ff22b7c3c5f96c2b258a3879b3dca79eafbc0462d5a40cd053eb4afecda7bb59af3b56f4d4ba1e228a60c28b92420105d9dee7ec36bd83'
+            self.vcpkgHash = 'f39fa1c34d2ba820954b8ce4acc05e3d0ce5fa5efe5440516ba910ff222c85c658ba4bbfc92b3fa6cbb594f99be115cda69ebe44ed38d4d3988058fb1faefbb3'
             self.hostTriplet = 'arm64-linux'
         else:
             self.exe = os.path.join(self.path, 'vcpkg')
