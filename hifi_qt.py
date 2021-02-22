@@ -99,7 +99,7 @@ endif()
                         print("Sorry, " + distro.name(pretty=True) + " is old and won't be officially supported. Please consider upgrading.");
                         raise Exception('UNKNOWN LINUX DISTRO VERSION!!!')
 
-                if distro.id() == 'debian':
+                elif distro.id() == 'debian':
                     u_major = int( distro.major_version() )
                     u_minor = int( distro.minor_version() )
 
