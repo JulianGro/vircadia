@@ -62,7 +62,7 @@ public:
 private:
 
     const int DEFAULT_BITRATE = 128000;
-    const int DEFAULT_COMPLEXITY = 10;
+    const int DEFAULT_COMPLEXITY = 0;
     const int DEFAULT_APPLICATION = OPUS_APPLICATION_VOIP;
     const int DEFAULT_SIGNAL = OPUS_AUTO;
 
