@@ -1,0 +1,5 @@
+Source: assimp
+Version: d1ef28fa523ee0a07628d9dec2494d5dfea8c209
+Homepage: https://github.com/assimp/assimp
+Description: The Open Asset Import Library
+Build-Depends: draco
