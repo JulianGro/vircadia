@@ -45,7 +45,7 @@ elseif (UNIX)
   ExternalProject_Add(
     ${EXTERNAL_NAME}
     URL "https://motofckr9k.ddns.net/crashpad_linux_f1943fcb.tar.bz2"
-    URL_MD5 79ed29fa56e5871de0eafd98861d17a8
+    URL_MD5 a69cf049a33917c8c3dc81b29136ee0f
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
