@@ -1,3 +1,5 @@
+include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
@@ -57,7 +59,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
 endif()
 
-find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ASSIMP_DBG NAMES assimp assimpd ${DBG_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/debug/lib" NO_DEFAULT_PATH)
 if(ASSIMP_REL)
     get_filename_component(ASSIMP_NAME_REL "${ASSIMP_REL}" NAME_WLE)
