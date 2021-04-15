@@ -1,6 +1,6 @@
 //
 //  OBJSerializer.cpp
-//  libraries/fbx/src/
+//  libraries/model-serializers/src
 //
 //  Created by Seth Alves on 3/7/15.
 //  Copyright 2013 High Fidelity, Inc.

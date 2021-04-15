@@ -1,6 +1,6 @@
 //
 //  FBXSerializer.cpp
-//  libraries/fbx/src
+//  libraries/model-serializers/src
 //
 //  Created by Andrzej Kapolka on 9/18/13.
 //  Copyright 2013 High Fidelity, Inc.

@@ -1,6 +1,6 @@
 //
 //  GLTFSerializer.h
-//  libraries/fbx/src
+//  libraries/model-serializers/src
 //
 //  Created by Luis Cuenca on 8/30/17.
 //  Copyright 2017 High Fidelity, Inc.
