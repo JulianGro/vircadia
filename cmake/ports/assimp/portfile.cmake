@@ -1,4 +1,5 @@
-message(STATUS "boop1")
+include(vcpkg_common_functions)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
@@ -9,7 +10,6 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ASSIMP_BUILD_SHARED_LIBS)
 
-message(STATUS "boop2")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -18,10 +18,9 @@ vcpkg_configure_cmake(
             -DBUILD_SHARED_LIBS=${ASSIMP_BUILD_SHARED_LIBS}
 )
 
-message(STATUS "boop3")
 vcpkg_install_cmake()
-message(STATUS "boop4")
-# vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH debug/lib/cmake)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-message(STATUS "boop5")
