@@ -1,5 +1,6 @@
 Source: assimp
-Version: d1ef28fa523ee0a07628d9dec2494d5dfea8c209
+Version: 5.0.1
+Port-Version: 4
 Homepage: https://github.com/assimp/assimp
-Description: The Open Asset Import Library
-Build-Depends: draco
+Description: The Open Asset import library
+Build-Depends: zlib, rapidjson, minizip, stb, kubazip, irrlicht, polyclipping, utfcpp, poly2tri
