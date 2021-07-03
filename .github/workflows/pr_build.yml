@@ -44,6 +44,10 @@ jobs:
             - os: ubuntu-18.04
               build_type: android
               apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0
+            - os: ubuntu-20.04
+              build_type: full_debian-10_aarch64
+              apt-dependencies: debootstrap qemu-user-static qemu-system-arm binfmt-support
+              chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3
         fail-fast: false
     runs-on: ${{matrix.os}}
     if: github.event.action != 'labeled' || github.event.label.name == 'rebuild'
@@ -61,7 +65,7 @@ jobs:
           echo "PYTHON_EXEC=python3" >> $GITHUB_ENV
           echo "INSTALLER_EXT=*" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=-- -j3" >> $GITHUB_ENV
-          if [ "${{ matrix.build_type }}" = "full" ]; then
+          if [ "${{ matrix.build_type }}" = "full"* ]; then
             echo "CMAKE_EXTRA=-DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
           else
             echo "CMAKE_EXTRA=-DCLIENT_ONLY=1 -DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
@@ -95,6 +99,7 @@ jobs:
           mkdir $HIFI_ANDROID_PRECOMPILED
           echo "INSTALLER_EXT=apk" >> $GITHUB_ENV
         fi
+
     # Configuration is broken into two steps because you can't set an env var and also reference it in the same step
     - name: Configure Build Environment 2
       shell: bash
@@ -112,15 +117,17 @@ jobs:
         else
           echo "ARTIFACT_PATTERN=*.$INSTALLER_EXT" >> $GITHUB_ENV
         fi
+
     - name: Clear Working Directory
       if: startsWith(matrix.os, 'windows')
       shell: bash
       working-directory: ${{runner.workspace}}
       run: rm -rf ./*
     - uses: actions/checkout@v1
-      with: 
+      with:
         submodules: true
         fetch-depth: 1
+
     - name: Install dependencies
       shell: bash
       if: startsWith(matrix.os, 'ubuntu')
@@ -133,33 +140,58 @@ jobs:
 
         echo "Installing apt packages"
         sudo apt install -y ${{ matrix.apt-dependencies }} || exit 1
+
+    - name: Set Up Chroot
+      if: matrix.build_type == *"debian-10"*
+      shell: bash
+      run: |
+        echo "Creating Chroot:"
+        mkdir -p ${{runner.workspace}}/chroot
+        debootstrap --arch arm64 buster ${{runner.workspace}}/chroot
+        cd ${{runner.workspace}}/chroot
+        cp /usr/bin/qemu-aarch64-static usr/bin/
+        mount --bind /dev dev/
+        mount --bind /sys sys/
+        mount --bind proc proc/
+        mount --bind /dev/pts dev/pts/
+        echo "Entering Chroot:"
+        chroot . /bin/bash
+        echo "Installing apt packages"
+        apt install -y ${{ matrix.chroot-apt-dependencies }}
+
     - name: Create Build Environment
       shell: bash
       run: cmake -E make_directory "${{runner.workspace}}/build"
+
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+
     - name: Build Domain Server
       if: matrix.build_type == 'full'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+
     - name: Build Assignment Client
       if: matrix.build_type == 'full'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+
     - name: Build Console
       if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+
     - name: Build Installer
       if: matrix.build_type != 'android'
       working-directory: ${{runner.workspace}}/build
@@ -188,6 +220,7 @@ jobs:
           done
         }
         retry cmake --build . --config $BUILD_TYPE --target package $CMAKE_BUILD_EXTRA
+
     # As of 05/17/21 GitHub Virtual Environments changed their "Ubuntu 18.04.5 LTS" image to include two versions of CMake for Android
     # https://github.com/actions/virtual-environments/blob/ubuntu18/20210517.1/images/linux/Ubuntu1804-README.md
     # Removing 3.18.1 version of CMake as its not compatible with our Android build.
@@ -198,6 +231,7 @@ jobs:
       working-directory: ${{runner.workspace}}/vircadia
       run: |
         /usr/local/lib/android/sdk/tools/bin/sdkmanager --uninstall 'cmake;3.18.1'
+
     - name: Build for Android + Quest
       if: matrix.build_type == 'android'
       shell: bash
@@ -210,6 +244,7 @@ jobs:
         ./gradlew -m tasks -PHIFI_ANDROID_PRECOMPILED=$HIFI_ANDROID_PRECOMPILED
         # Build!
         ./build_android.sh
+
     - name: Output system stats
       if: ${{ always() }}
       working-directory: ${{runner.workspace}}/build
@@ -217,11 +252,13 @@ jobs:
       run: |
         echo "Disk usage:"
         df -h
+
     - name: Output Installer Logs
       if: failure() && matrix.os == 'windows-latest'
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: cat ./_CPack_Packages/win64/NSIS/NSISOutput.log
+
     - name: Upload Artifact
       shell: bash
       working-directory: ${{runner.workspace}}/build
