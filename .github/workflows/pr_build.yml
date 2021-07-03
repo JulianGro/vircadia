@@ -32,18 +32,18 @@ jobs:
     strategy:
         matrix:
           include:
-            - os: windows-latest
-              build_type: full
-            - os: macOS-latest
-              build_type: full
-            - os: macOS-latest
-              build_type: client
-            - os: ubuntu-18.04
-              build_type: full
-              apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3
-            - os: ubuntu-18.04
-              build_type: android
-              apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0
+            #- os: windows-latest
+            #  build_type: full
+            #- os: macOS-latest
+            #  build_type: full
+            #- os: macOS-latest
+            #  build_type: client
+            #- os: ubuntu-18.04
+            #  build_type: full
+            #  apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3
+            #- os: ubuntu-18.04
+            #  build_type: android
+            #  apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0
             - os: ubuntu-20.04
               build_type: full_debian-10_aarch64
               apt-dependencies: debootstrap qemu-user-static qemu-system-arm binfmt-support
@@ -125,7 +125,7 @@ jobs:
       run: rm -rf ./*
     - uses: actions/checkout@v1
       with:
-        submodules: true
+        submodules: false
         fetch-depth: 1
 
     - name: Install dependencies
