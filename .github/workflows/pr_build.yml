@@ -147,15 +147,15 @@ jobs:
       run: |
         echo "Creating Chroot:"
         mkdir -p ${{runner.workspace}}/chroot
-        debootstrap --arch arm64 buster ${{runner.workspace}}/chroot
+        sudo debootstrap --arch arm64 buster ${{runner.workspace}}/chroot
         cd ${{runner.workspace}}/chroot
-        cp /usr/bin/qemu-aarch64-static usr/bin/
-        mount --bind /dev dev/
-        mount --bind /sys sys/
-        mount --bind proc proc/
-        mount --bind /dev/pts dev/pts/
+        sudo cp /usr/bin/qemu-aarch64-static usr/bin/
+        sudo mount --bind /dev dev/
+        sudo mount --bind /sys sys/
+        sudo mount --bind proc proc/
+        sudo mount --bind /dev/pts dev/pts/
         echo "Entering Chroot:"
-        chroot . /bin/bash
+        sudo chroot . /bin/bash
         echo "Installing apt packages"
         apt install -y ${{ matrix.chroot-apt-dependencies }}
 
