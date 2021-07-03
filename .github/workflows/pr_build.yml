@@ -156,6 +156,7 @@ jobs:
         sudo mount --bind /dev/pts dev/pts/
         echo "Entering Chroot:"
         sudo chroot . /bin/bash
+        uname -a
         echo "Installing apt packages"
         apt install -y ${{ matrix.chroot-apt-dependencies }}
 
