@@ -143,7 +143,6 @@ jobs:
 
     - name: Set Up Chroot
       if [ matrix.build_type == *"debian-10"* ]
-#      if: matrix.build_type == *"debian-10"*
       shell: bash
       run: |
         echo "Creating Chroot:"
