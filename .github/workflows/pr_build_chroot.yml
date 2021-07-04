@@ -1,4 +1,4 @@
-name: Pull Request CI Build
+name: Pull Request CI Build in Chroot
 
 on:
   pull_request:
@@ -17,37 +17,18 @@ env:
   # Sentry Crash Reporting
   CMAKE_BACKTRACE_URL: ${{ secrets.MINIDUMP_TOKEN }}
   CMAKE_BACKTRACE_TOKEN: PR_${{ github.event.number }}_${{ github.sha }}
-
-  # OSX specific variables
-  DEVELOPER_DIR: /Applications/Xcode_11.2.app/Contents/Developer
-  MACOSX_DEPLOYMENT_TARGET: '10.11'
-
-  # WIN32 specific variables
-  PreferredToolArchitecture: X64
-
-
 jobs:
   build:
-    name: "build (${{matrix.os}}, ${{matrix.build_type}})"
+    name: "Host (${{matrix.os}}, ${{matrix.build_type}})"
     strategy:
         matrix:
           include:
-            #- os: windows-latest
-            #  build_type: full
-            #- os: macOS-latest
-            #  build_type: full
-            #- os: macOS-latest
-            #  build_type: client
-            #- os: ubuntu-18.04
-            #  build_type: full
-            #  apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3
-            #- os: ubuntu-18.04
-            #  build_type: android
-            #  apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0
-            #- os: ubuntu-20.04
-            #  build_type: full_debian-10_aarch64
-            #  apt-dependencies: debootstrap qemu-user-static qemu-system-arm binfmt-support
-            #  chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential cmake freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libglvnd-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick
+            - os: ubuntu-20.04
+              chroot-os: debian-10
+              chroot-architecture: aarch64
+              build_type: full
+              apt-dependencies: debootstrap qemu-user-static qemu-system-arm binfmt-support
+              chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential cmake freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libglvnd-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick
         fail-fast: false
     runs-on: ${{matrix.os}}
     if: github.event.action != 'labeled' || github.event.label.name == 'rebuild'
@@ -71,34 +52,6 @@ jobs:
             echo "CMAKE_EXTRA=-DCLIENT_ONLY=1 -DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
           fi
         fi
-        # Mac build variables
-        if [ "${{ matrix.os }}" = "macOS-latest" ]; then
-          echo "PYTHON_EXEC=python3" >> $GITHUB_ENV
-          echo "INSTALLER_EXT=dmg" >> $GITHUB_ENV
-          if [ "${{ matrix.build_type }}" = "full" ]; then
-            echo "CMAKE_EXTRA=-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -G Xcode" >> $GITHUB_ENV
-          else
-            echo "CMAKE_EXTRA=-DCLIENT_ONLY=1 -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED=OFF -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -G Xcode" >> $GITHUB_ENV
-          fi
-          echo "APP_TARGET_NAME=Vircadia" >> $GITHUB_ENV
-        fi
-        # Windows build variables
-        if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          echo "PYTHON_EXEC=python" >> $GITHUB_ENV
-          echo "INSTALLER_EXT=exe" >> $GITHUB_ENV
-          if [ "${{ matrix.build_type }}" = "full" ]; then
-            echo "CMAKE_EXTRA=-A x64" >> $GITHUB_ENV
-          else
-            echo "CMAKE_EXTRA=-A x64 -DCLIENT_ONLY=1" >> $GITHUB_ENV
-          fi
-        fi
-        # Android + Quest build variables
-        if [[ "${{ matrix.build_type }}" == "android" ]]; then
-          HIFI_ANDROID_PRECOMPILED="${{runner.workspace}}/dependencies"
-          echo "HIFI_ANDROID_PRECOMPILED=$HIFI_ANDROID_PRECOMPILED" >> $GITHUB_ENV
-          mkdir $HIFI_ANDROID_PRECOMPILED
-          echo "INSTALLER_EXT=apk" >> $GITHUB_ENV
-        fi
 
     # Configuration is broken into two steps because you can't set an env var and also reference it in the same step
     - name: Configure Build Environment 2
@@ -118,31 +71,23 @@ jobs:
           echo "ARTIFACT_PATTERN=*.$INSTALLER_EXT" >> $GITHUB_ENV
         fi
 
-    - name: Clear Working Directory
-      if: startsWith(matrix.os, 'windows')
-      shell: bash
-      working-directory: ${{runner.workspace}}
-      run: rm -rf ./*
     - uses: actions/checkout@v1
       with:
         submodules: false
         fetch-depth: 1
+        path: 'chroot/'
 
-    - name: Install dependencies
+    - name: Install host dependencies
       shell: bash
       if: startsWith(matrix.os, 'ubuntu')
       run: |
-        echo "Installing Python Modules:"
-        pip3 install distro || exit 1
-
         echo "Updating apt repository index"
         sudo apt update || exit 1
 
         echo "Installing apt packages"
         sudo apt install -y ${{ matrix.apt-dependencies }} || exit 1
 
-    - name: Set Up Chroot
-      if: matrix.build_type == 'full_debian-10_aarch64'
+    - name: Creating Chroot
       shell: bash
       run: |
         echo "Creating Chroot:"
@@ -154,41 +99,45 @@ jobs:
         sudo mount --bind /sys sys/
         sudo mount --bind proc proc/
         sudo mount --bind /dev/pts dev/pts/
-        echo "Installing apt packages in chroot"
-        sudo chroot . apt install -y ${{ matrix.chroot-apt-dependencies }}
+
+    - name: Install chroot dependencies
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: sudo chroot . apt install -y ${{ matrix.chroot-apt-dependencies }}
 
     - name: Create Build Environment
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
       run: sudo chroot ${{runner.workspace}}/chroot/ cmake -E make_directory "${{runner.workspace}}/build"
 
     - name: Configure CMake
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
       run: sudo chroot ${{runner.workspace}}/chroot/ cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
 
     - name: Build Domain Server
       if: matrix.build_type == 'full'
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
 
     - name: Build Assignment Client
       if: matrix.build_type == 'full'
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
 
     - name: Build Console
       if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
 
     - name: Build Installer
       if: matrix.build_type != 'android'
