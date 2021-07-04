@@ -53,6 +53,13 @@ jobs:
           fi
         fi
 
+
+        # aarch64 build variables
+        if [[ "${{ matrix.chroot-architecture }}" = "aarch64" ]]; then
+          # Limitation of VCPKG v2020.11-1 on arm and s390x platforms
+          echo "VCPKG_FORCE_SYSTEM_BINARIES=true" >> $GITHUB_ENV
+        fi
+
     # Configuration is broken into two steps because you can't set an env var and also reference it in the same step
     - name: Configure Build Environment 2
       shell: bash
