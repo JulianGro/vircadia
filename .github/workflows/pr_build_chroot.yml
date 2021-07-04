@@ -108,12 +108,12 @@ jobs:
     - name: Create Build Environment
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot ${{runner.workspace}}/chroot/ cmake -E make_directory "${{runner.workspace}}/build"
+      run: sudo chroot . cmake -E make_directory build/
 
     - name: Configure CMake
-      working-directory: ${{runner.workspace}}/chroot/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot ${{runner.workspace}}/chroot/ cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      run: sudo chroot . cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
