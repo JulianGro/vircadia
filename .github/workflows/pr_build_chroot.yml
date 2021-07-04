@@ -28,7 +28,8 @@ jobs:
               chroot-architecture: aarch64
               build_type: full
               apt-dependencies: debootstrap qemu-user-static qemu-system-arm binfmt-support
-              chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential cmake freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libglvnd-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick ninja-build curl zip unzip tar
+              chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick ninja-build curl zip unzip tar
+              chroot-apt-backports-dependencies: cmake
         fail-fast: false
     runs-on: ${{matrix.os}}
     if: github.event.action != 'labeled' || github.event.label.name == 'rebuild'
@@ -115,7 +116,7 @@ jobs:
         cat > ${{runner.workspace}}/enable_backports.sh <<SCRIPT
         #!/bin/bash
         echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/buster-backports.list
-        echo -e "Package: *\nPin: release n=buster-backports*\nPin-Priority: 999" > /etc/apt/preferences.d/buster-backports.pref
+        echo -e "Package: *\nPin: release n=buster-backports*\nPin-Priority: 100" > /etc/apt/preferences.d/buster-backports.pref
         SCRIPT
         sudo mv ${{runner.workspace}}/enable_backports.sh ${{runner.workspace}}/chroot/bin/enable_backports.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/enable_backports.sh
@@ -123,6 +124,7 @@ jobs:
         sudo chroot . /bin/enable_backports.sh
         sudo chroot . apt update
         sudo chroot . apt install -y ${{ matrix.chroot-apt-dependencies }}
+        sudo chroot . apt install -t buster-backports -y ${{ matrix.chroot-apt-backports-dependencies }}
 
     - name: Create Build Environment
       working-directory: ${{runner.workspace}}/chroot
