@@ -158,13 +158,13 @@ jobs:
         sudo chroot . apt install -y ${{ matrix.chroot-apt-dependencies }}
 
     - name: Create Build Environment
-      shell: sudo chroot ${{runner.workspace}}/chroot/ /bin/bash
-      run: cmake -E make_directory "${{runner.workspace}}/build"
+      shell: bash
+      run: sudo chroot ${{runner.workspace}}/chroot/ cmake -E make_directory "${{runner.workspace}}/build"
 
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/build
-      shell: sudo chroot ${{runner.workspace}}/chroot/ /bin/bash
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      shell: bash
+      run: sudo chroot ${{runner.workspace}}/chroot/ cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
