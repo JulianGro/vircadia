@@ -115,36 +115,36 @@ jobs:
     - name: Create Build Environment
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . VCPKG_FORCE_SYSTEM_BINARIES=1 cmake -E make_directory build/
+      run: sudo -E chroot . cmake -E make_directory build/
 
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      run: sudo -E chroot . cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot . cmake --build build/ --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
 
     - name: Build Domain Server
       if: matrix.build_type == 'full'
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot . cmake --build build/ --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
 
     - name: Build Assignment Client
       if: matrix.build_type == 'full'
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot . cmake --build build/ --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
 
     - name: Build Console
       if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . cmake --build build/ --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot . cmake --build build/ --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
 
     - name: Build Installer
       if: matrix.build_type != 'android'
@@ -173,7 +173,7 @@ jobs:
             }
           done
         }
-        retry sudo chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target package $CMAKE_BUILD_EXTRA
+        retry sudo -E chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target package $CMAKE_BUILD_EXTRA
 
     # As of 05/17/21 GitHub Virtual Environments changed their "Ubuntu 18.04.5 LTS" image to include two versions of CMake for Android
     # https://github.com/actions/virtual-environments/blob/ubuntu18/20210517.1/images/linux/Ubuntu1804-README.md
