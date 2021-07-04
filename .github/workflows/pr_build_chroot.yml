@@ -19,7 +19,7 @@ env:
   CMAKE_BACKTRACE_TOKEN: PR_${{ github.event.number }}_${{ github.sha }}
 jobs:
   build:
-    name: "Host (${{matrix.os}}, ${{matrix.build_type}})"
+    name: "(${{matrix.chroot-os}} ${{matrix.chroot-architecture}}, ${{matrix.build_type}})"
     strategy:
         matrix:
           include:
