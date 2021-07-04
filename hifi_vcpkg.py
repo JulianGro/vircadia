@@ -109,7 +109,7 @@ endif()
         elif 'Linux' == system and 'aarch64' == machine:
             self.exe = os.path.join(self.path, 'vcpkg')
             self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
-            self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg-2020.11-1_arm64.tar.xz'
+            self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg_workaround_aarch64.tar.gz'
             self.vcpkgHash = 'f39fa1c34d2ba820954b8ce4acc05e3d0ce5fa5efe5440516ba910ff222c85c658ba4bbfc92b3fa6cbb594f99be115cda69ebe44ed38d4d3988058fb1faefbb3'
             self.hostTriplet = 'arm64-linux'
         else:
