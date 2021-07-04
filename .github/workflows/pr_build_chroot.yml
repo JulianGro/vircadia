@@ -115,7 +115,7 @@ jobs:
     - name: Create Build Environment
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo chroot . cmake -E make_directory build/
+      run: sudo chroot . VCPKG_FORCE_SYSTEM_BINARIES=1 cmake -E make_directory build/
 
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/chroot
