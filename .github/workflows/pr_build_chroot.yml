@@ -112,11 +112,12 @@ jobs:
       shell: bash
       run: |
         # Add backports repo to get newer versions of packages like CMake
-        sudo cat > ${{runner.workspace}}/chroot/bin/enable_backports.sh <<SCRIPT
+        cat > ${{runner.workspace}}/enable_backports.sh <<SCRIPT
         #!/bin/bash
         echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/buster-backports.list
         echo -e "Package: *\nPin: release n=buster-backports*\nPin-Priority: 999" > /etc/apt/preferences.d/buster-backports.pref
         SCRIPT
+        sudo mv ${{runner.workspace}}/enable_backports.sh ${{runner.workspace}}/chroot/bin/enable_backports.sh
 
         sudo chroot . /bin/enable_backports.sh
         sudo chroot . apt update
