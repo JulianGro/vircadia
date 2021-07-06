@@ -73,7 +73,7 @@ jobs:
       with:
         submodules: false
         fetch-depth: 1
-        path: 'chroot/'
+        path: 'chroot/source'
 
     - name: Install host dependencies
       shell: bash
@@ -120,10 +120,15 @@ jobs:
       shell: bash
       run: sudo -E chroot . cmake -E make_directory build/
 
-    - name: Configure CMake
-      working-directory: ${{runner.workspace}}/chroot/build
+    - name: Show filesystem
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo -E chroot --skip-chdir ${{runner.workspace}}/chroot/build cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      run: sudo -E chroot . tree -L 2 -d
+
+    - name: Configure CMake
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: sudo -E chroot . cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
