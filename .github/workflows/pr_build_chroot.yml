@@ -123,7 +123,7 @@ jobs:
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
-      run: sudo -E chroot --skip-chdir ../ cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      run: sudo -E chroot --skip-chdir ${{runner.workspace}}/chroot/build cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
