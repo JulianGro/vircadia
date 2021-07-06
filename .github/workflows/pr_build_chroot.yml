@@ -123,31 +123,31 @@ jobs:
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
-      run: sudo -E chroot --skip-chdir .. cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      run: sudo -E chroot --skip-chdir ../ cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
       working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
-      run: sudo -E chroot --skip-chdir .. cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
 
     - name: Build Domain Server
       if: matrix.build_type == 'full' || matrix.build_type == 'server'
       working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
-      run: sudo -E chroot --skip-chdir .. cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
 
     - name: Build Assignment Client
       if: matrix.build_type == 'full' || matrix.build_type == 'server'
       working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
-      run: sudo -E chroot --skip-chdir .. cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
 
     - name: Build Console
       if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
       working-directory: ${{runner.workspace}}/chroot/build
       shell: bash
-      run: sudo -E chroot --skip-chdir .. cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
 
     - name: Build Installer
       if: matrix.build_type != 'android'
