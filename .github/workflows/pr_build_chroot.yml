@@ -25,7 +25,7 @@ jobs:
               chroot-os: debian-10
               build_type: full
               apt-dependencies: debootstrap
-              chroot-apt-dependencies: tree mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick ninja-build curl zip unzip tar
+              chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick ninja-build curl zip unzip tar
               chroot-apt-backports-dependencies: cmake
         fail-fast: false
     runs-on: ${{matrix.os}}
@@ -97,6 +97,14 @@ jobs:
         sudo mount --bind proc proc/
         sudo mount --bind /dev/pts dev/pts/
 
+    - name: Test Interactive
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        sudo -E chroot . bash -i
+        cd bin
+        ls
+
     - name: Install chroot dependencies
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
@@ -120,15 +128,10 @@ jobs:
       shell: bash
       run: sudo -E chroot . cmake -E make_directory build/
 
-    - name: Show filesystem
-      working-directory: ${{runner.workspace}}/chroot
-      shell: bash
-      run: sudo -E chroot . tree -L 2 -d
-
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo -E chroot . cmake . -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+      run: sudo -E chroot . cd build && cmake ../source -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
