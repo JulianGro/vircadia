@@ -101,7 +101,7 @@ jobs:
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
       run: |
-        sudo -E chroot . bash -i /
+        sudo -E chroot . bash -i \
         && lsb_release -a
 
     - name: Install chroot dependencies
