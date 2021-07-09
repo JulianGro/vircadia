@@ -102,7 +102,7 @@ jobs:
       shell: bash
       run: |
         sudo -E chroot . bash -i
-        lsb-release -a
+        lsb_release -a
 
     - name: Install chroot dependencies
       working-directory: ${{runner.workspace}}/chroot
