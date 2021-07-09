@@ -132,7 +132,8 @@ jobs:
         sudo mv ${{runner.workspace}}/configure_cmake.sh ${{runner.workspace}}/chroot/bin/configure_cmake.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/configure_cmake.sh
         sudo -E chroot . /bin/configure_cmake.sh
-        sudo -E chroot . ldd /home/runner/vircadia-files/qt/qt5-install/bin/uic
+        echo "/home/runner/vircadia-files/qt/qt5-install/lib/libQt5Core.so.5"
+        sudo -E chroot . ldd /home/runner/vircadia-files/qt/qt5-install/lib/libQt5Core.so.5
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
