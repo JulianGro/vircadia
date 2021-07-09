@@ -97,13 +97,6 @@ jobs:
         sudo mount --bind proc proc/
         sudo mount --bind /dev/pts dev/pts/
 
-    - name: Test Interactive
-      working-directory: ${{runner.workspace}}/chroot
-      shell: bash
-      run: |
-        sudo -E chroot . bash -i \
-        && lsb_release -a
-
     - name: Install chroot dependencies
       working-directory: ${{runner.workspace}}/chroot
       shell: bash
@@ -116,7 +109,6 @@ jobs:
         SCRIPT
         sudo mv ${{runner.workspace}}/enable_backports.sh ${{runner.workspace}}/chroot/bin/enable_backports.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/enable_backports.sh
-
         sudo chroot . /bin/enable_backports.sh
         sudo chroot . apt update
         sudo chroot . apt install -y ${{ matrix.chroot-apt-dependencies }}
@@ -139,38 +131,82 @@ jobs:
         SCRIPT
         sudo mv ${{runner.workspace}}/configure_cmake.sh ${{runner.workspace}}/chroot/bin/configure_cmake.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/configure_cmake.sh
-
         sudo -E chroot . /bin/configure_cmake.sh
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
-      working-directory: ${{runner.workspace}}/chroot/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_application.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_application.sh ${{runner.workspace}}/chroot/bin/build_application.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_application.sh
+        sudo -E chroot . /bin/build_application.sh
 
     - name: Build Domain Server
       if: matrix.build_type == 'full' || matrix.build_type == 'server'
-      working-directory: ${{runner.workspace}}/chroot/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_domain_server.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_domain_server.sh ${{runner.workspace}}/chroot/bin/build_domain_server.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_domain_server.sh
+        sudo -E chroot . /bin/build_domain_server.sh
 
     - name: Build Assignment Client
       if: matrix.build_type == 'full' || matrix.build_type == 'server'
-      working-directory: ${{runner.workspace}}/chroot/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_assignment_client.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/configure_cmake.sh ${{runner.workspace}}/chroot/bin/build_assignment_client.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_assignment_client.sh
+        sudo -E chroot . /bin/build_assignment_client.sh
 
     - name: Build Console
       if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
-      working-directory: ${{runner.workspace}}/chroot/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
-      run: sudo -E chroot --skip-chdir ../ cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_console.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_console.sh ${{runner.workspace}}/chroot/bin/build_console.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_console.sh
+        sudo -E chroot . /bin/build_console.sh
 
     - name: Build Installer
       if: matrix.build_type != 'android'
-      working-directory: ${{runner.workspace}}/build
+      working-directory: ${{runner.workspace}}/chroot
       shell: bash
       run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_installer.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target package $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_installer.sh ${{runner.workspace}}/chroot/bin/build_installer.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_installer.sh
+
         echo "Retry code from https://unix.stackexchange.com/a/137639"
         function fail {
           echo $1 >&2
@@ -193,7 +229,7 @@ jobs:
             }
           done
         }
-        retry sudo -E chroot ${{runner.workspace}}/chroot/ cmake --build . --config $BUILD_TYPE --target package $CMAKE_BUILD_EXTRA
+        retry sudo -E chroot . /bin/build_installer.sh
 
     - name: Output system stats
       if: ${{ always() }}
@@ -202,12 +238,6 @@ jobs:
       run: |
         echo "Disk usage:"
         df -h
-
-    - name: Output Installer Logs
-      if: failure() && matrix.os == 'windows-latest'
-      shell: bash
-      working-directory: ${{runner.workspace}}/build
-      run: cat ./_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Upload Artifact
       shell: bash
