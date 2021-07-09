@@ -147,6 +147,7 @@ jobs:
         SCRIPT
         sudo mv ${{runner.workspace}}/build_application.sh ${{runner.workspace}}/chroot/bin/build_application.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/build_application.sh
+        sudo -E chroot . ldd /home/runner/vircadia-files/qt/qt5-install/bin/uic
         sudo -E chroot . /bin/build_application.sh
 
     - name: Build Domain Server
