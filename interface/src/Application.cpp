@@ -657,7 +657,7 @@ private:
     }
 };
 
-/**jsdoc
+/*@jsdoc
  * <p>The <code>Controller.Hardware.Application</code> object has properties representing Interface's state. The property
  * values are integer IDs, uniquely identifying each output. <em>Read-only.</em></p>
  * <p>These states can be mapped to actions or functions or <code>Controller.Standard</code> items in a {@link RouteObject}
@@ -1011,7 +1011,7 @@ const bool DEFAULT_HMD_TABLET_BECOMES_TOOLBAR = false;
 const bool DEFAULT_PREFER_STYLUS_OVER_LASER = false;
 const bool DEFAULT_PREFER_AVATAR_FINGER_OVER_STYLUS = false;
 const QString DEFAULT_CURSOR_NAME = "DEFAULT";
-const bool DEFAULT_MINI_TABLET_ENABLED = true;
+const bool DEFAULT_MINI_TABLET_ENABLED = false;
 const bool DEFAULT_AWAY_STATE_WHEN_FOCUS_LOST_IN_VR_ENABLED = true;
 
 QSharedPointer<OffscreenUi> getOffscreenUI() {
@@ -1972,7 +1972,7 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
     loadSettings();
 
     updateVerboseLogging();
-    
+
     setCachebustRequire();
 
     // Make sure we don't time out during slow operations at startup
@@ -2624,7 +2624,7 @@ void Application::setCachebustRequire() {
         return;
     }
     bool enable = menu->isOptionChecked(MenuOption::CachebustRequire);
-    
+
     Setting::Handle<bool>{ CACHEBUST_SCRIPT_REQUIRE_SETTING_NAME, false }.set(enable);
 }
 
@@ -3246,7 +3246,7 @@ void Application::initializeUi() {
             safeURLS += settingsSafeURLS;
 
             // END PULL SAFEURLS FROM INTERFACE.JSON Settings
-            
+
             if (AUTHORIZED_EXTERNAL_QML_SOURCE.isParentOf(url)) {
                 return true;
             } else {
@@ -4004,7 +4004,7 @@ void Application::handleSandboxStatus(QNetworkReply* reply) {
     parser.parse(arguments());
     if (parser.isSet(urlOption)) {
         QUrl url = QUrl(parser.value(urlOption));
-        if (url.scheme() == URL_SCHEME_HIFIAPP) {
+        if (url.scheme() == URL_SCHEME_VIRCADIAAPP) {
             Setting::Handle<QVariant>("startUpApp").set(url.path());
         } else {
             addressLookupString = url.toString();
@@ -4022,7 +4022,7 @@ void Application::handleSandboxStatus(QNetworkReply* reply) {
             DependencyManager::get<LocationBookmarks>()->setHomeLocationToAddress(NetworkingConstants::DEFAULT_VIRCADIA_ADDRESS);
             Menu::getInstance()->triggerOption(MenuOption::HomeLocation);
         }
-        
+
         if (!_overrideEntry) {
             DependencyManager::get<AddressManager>()->goToEntry();
             sentTo = SENT_TO_ENTRY;
@@ -7198,7 +7198,7 @@ void Application::updateWindowTitle() const {
     QString buildVersion = " - Vircadia - "
         + (BuildInfo::BUILD_TYPE == BuildInfo::BuildType::Stable ? QString("Version") : QString("Build"))
         + " " + applicationVersion();
-        
+
     if (BuildInfo::RELEASE_NAME != "") {
         buildVersion += " - " + BuildInfo::RELEASE_NAME;
     }
@@ -7285,7 +7285,7 @@ void Application::clearDomainOctreeDetails(bool clearAll) {
 
 void Application::domainURLChanged(QUrl domainURL) {
     // disable physics until we have enough information about our new location to not cause craziness.
-    setIsServerlessMode(domainURL.scheme() != URL_SCHEME_HIFI);
+    setIsServerlessMode(domainURL.scheme() != URL_SCHEME_VIRCADIA);
     if (isServerlessMode()) {
         loadServerlessDomain(domainURL);
     }
@@ -7294,7 +7294,7 @@ void Application::domainURLChanged(QUrl domainURL) {
 
 void Application::goToErrorDomainURL(QUrl errorDomainURL) {
     // disable physics until we have enough information about our new location to not cause craziness.
-    setIsServerlessMode(errorDomainURL.scheme() != URL_SCHEME_HIFI);
+    setIsServerlessMode(errorDomainURL.scheme() != URL_SCHEME_VIRCADIA);
     if (isServerlessMode()) {
         loadErrorDomain(errorDomainURL);
     }
@@ -7658,7 +7658,7 @@ bool Application::canAcceptURL(const QString& urlString) const {
     QUrl url(urlString);
     if (url.query().contains(WEB_VIEW_TAG)) {
         return false;
-    } else if (urlString.startsWith(URL_SCHEME_HIFI)) {
+    } else if (urlString.startsWith(URL_SCHEME_VIRCADIA)) {
         return true;
     }
     QString lowerPath = url.path().toLower();
@@ -7673,7 +7673,7 @@ bool Application::canAcceptURL(const QString& urlString) const {
 bool Application::acceptURL(const QString& urlString, bool defaultUpload) {
     QUrl url(urlString);
 
-    if (url.scheme() == URL_SCHEME_HIFI) {
+    if (url.scheme() == URL_SCHEME_VIRCADIA) {
         // this is a hifi URL - have the AddressManager handle it
         QMetaObject::invokeMethod(DependencyManager::get<AddressManager>().data(), "handleLookupString",
                                   Qt::AutoConnection, Q_ARG(const QString&, urlString));
@@ -7901,7 +7901,7 @@ bool Application::askToReplaceDomainContent(const QString& url) {
             static const QString infoText = simpleWordWrap("Your domain's content will be replaced with a new content set. "
                 "If you want to save what you have now, create a backup before proceeding. For more information about backing up "
                 "and restoring content, visit the documentation page at: ", MAX_CHARACTERS_PER_LINE) +
-                "\nhttps://docs.vircadia.dev/host/maintain-domain/backup-domain.html";
+                "\nhttps://docs.vircadia.com/host/maintain-domain/backup-domain.html";
 
             ModalDialogListener* dig = OffscreenUi::asyncQuestion("Are you sure you want to replace this domain's content set?",
                                                                   infoText, QMessageBox::Yes | QMessageBox::No, QMessageBox::No);

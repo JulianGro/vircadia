@@ -12,7 +12,7 @@ generate_qrc(OUTPUT ${RESOURCES_QRC} PATH ${CMAKE_CURRENT_SOURCE_DIR}/resources 
 add_custom_command(
     OUTPUT ${RESOURCES_RCC}
     DEPENDS ${RESOURCES_QRC} ${GENERATE_QRC_DEPENDS}
-    COMMAND "${QT_DIR}/bin/rcc"
+    COMMAND "${RCC_BINARY}"
     ARGS ${RESOURCES_QRC} -binary -o ${RESOURCES_RCC}
 )
 
@@ -139,7 +139,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 if (UNIX AND NOT ANDROID)
     if (CMAKE_SYSTEM_NAME MATCHES "Linux")
         # Linux
-        target_link_libraries(${TARGET_NAME} pthread atomic)
+        target_link_libraries(${TARGET_NAME} atomic pthread)
     else ()
         # OSX
         target_link_libraries(${TARGET_NAME} pthread)

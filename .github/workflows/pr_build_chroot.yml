@@ -1,0 +1,251 @@
+name: Pull Request CI Build in Chroot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+env:
+  APP_NAME: interface
+  BUILD_TYPE: Release
+  CI_BUILD: Github
+  GIT_COMMIT: ${{ github.sha }}
+  RELEASE_TYPE: PR
+  RELEASE_NUMBER: ${{ github.event.number }}
+  VERSION_CODE: ${{ github.event.number }}
+  # Sentry Crash Reporting
+  CMAKE_BACKTRACE_URL: ${{ secrets.MINIDUMP_TOKEN }}
+  CMAKE_BACKTRACE_TOKEN: PR_${{ github.event.number }}_${{ github.sha }}
+jobs:
+  build:
+    name: "(${{matrix.chroot-os}} ${{matrix.chroot-architecture}}, ${{matrix.build_type}})"
+    strategy:
+        matrix:
+          include:
+            - os: ubuntu-20.04
+              chroot-os: debian-10
+              build_type: server
+              apt-dependencies: debootstrap
+              chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick ninja-build curl zip unzip tar
+              chroot-apt-backports-dependencies: cmake
+        fail-fast: false
+    runs-on: ${{matrix.os}}
+    if: github.event.action != 'labeled' || github.event.label.name == 'rebuild'
+    steps:
+    - name: Configure Build Environment 1
+      shell: bash
+      id: buildenv1
+      run: |
+        echo ::set-output name=github_sha_short::`echo $GIT_COMMIT | cut -c1-7`
+        echo "JOB_NAME=build (${{matrix.os}}, ${{matrix.build_type}})" >> $GITHUB_ENV
+        echo "APP_TARGET_NAME=$APP_NAME" >> $GITHUB_ENV
+
+        # Linux build variables
+        if [[ "${{ matrix.os }}" = "ubuntu-"* ]]; then
+          echo "PYTHON_EXEC=python3" >> $GITHUB_ENV
+          echo "INSTALLER_EXT=*" >> $GITHUB_ENV
+          echo "CMAKE_BUILD_EXTRA=-- -j3" >> $GITHUB_ENV
+          if [ "${{ matrix.build_type }}" = "full"* ]; then
+            echo "CMAKE_EXTRA=-DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
+          else
+            echo "CMAKE_EXTRA=-DCLIENT_ONLY=1 -DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
+          fi
+        fi
+
+    # Configuration is broken into two steps because you can't set an env var and also reference it in the same step
+    - name: Configure Build Environment 2
+      shell: bash
+      run: |
+        echo "${{ steps.buildenv1.outputs.symbols_archive }}"
+        echo "GIT_COMMIT_SHORT=${{ steps.buildenv1.outputs.github_sha_short }}" >> $GITHUB_ENV
+        if [[ "${{ matrix.build_type }}" != "android" ]]; then
+          if [ "${{ matrix.build_type }}" = "full" ]; then
+            echo "ARTIFACT_PATTERN=Vircadia-PR${{ github.event.number }}-*.$INSTALLER_EXT" >> $GITHUB_ENV
+            echo "INSTALLER=Vircadia-$RELEASE_NUMBER-$GIT_COMMIT_SHORT.$INSTALLER_EXT" >> $GITHUB_ENV
+          else
+            echo "ARTIFACT_PATTERN=Vircadia-Interface-PR${{ github.event.number }}-*.$INSTALLER_EXT" >> $GITHUB_ENV
+            echo "INSTALLER=Vircadia-Interface-$RELEASE_NUMBER-$GIT_COMMIT_SHORT.$INSTALLER_EXT" >> $GITHUB_ENV
+          fi
+        else
+          echo "ARTIFACT_PATTERN=*.$INSTALLER_EXT" >> $GITHUB_ENV
+        fi
+
+    - uses: actions/checkout@v1
+      with:
+        submodules: false
+        fetch-depth: 1
+        path: 'chroot/source'
+
+    - name: Install host dependencies
+      shell: bash
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+        echo "Updating apt repository index"
+        sudo apt update || exit 1
+
+        echo "Installing apt packages"
+        sudo apt install -y ${{ matrix.apt-dependencies }} || exit 1
+
+    - name: Creating Chroot
+      shell: bash
+      run: |
+        echo "Creating Chroot:"
+        mkdir -p ${{runner.workspace}}/chroot
+        sudo debootstrap --arch amd64 buster ${{runner.workspace}}/chroot
+        cd ${{runner.workspace}}/chroot
+        sudo mount --bind /dev dev/
+        sudo mount --bind /sys sys/
+        sudo mount --bind proc proc/
+        sudo mount --bind /dev/pts dev/pts/
+
+    - name: Install chroot dependencies
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Add backports repo to get newer versions of packages like CMake
+        cat > ${{runner.workspace}}/enable_backports.sh <<SCRIPT
+        #!/bin/bash
+        echo deb http://deb.debian.org/debian buster-backports main > /etc/apt/sources.list.d/buster-backports.list
+        echo -e "Package: *\nPin: release n=buster-backports*\nPin-Priority: 100" > /etc/apt/preferences.d/buster-backports.pref
+        SCRIPT
+        sudo mv ${{runner.workspace}}/enable_backports.sh ${{runner.workspace}}/chroot/bin/enable_backports.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/enable_backports.sh
+        sudo chroot . /bin/enable_backports.sh
+        sudo chroot . apt update
+        sudo chroot . apt install -y ${{ matrix.chroot-apt-dependencies }}
+        sudo chroot . apt install -t buster-backports -y ${{ matrix.chroot-apt-backports-dependencies }}
+
+    - name: Create Build Environment
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: sudo -E chroot . cmake -E make_directory build/
+
+    - name: Configure CMake
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/configure_cmake.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake ../source -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/configure_cmake.sh ${{runner.workspace}}/chroot/bin/configure_cmake.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/configure_cmake.sh
+        sudo -E chroot . /bin/configure_cmake.sh
+
+    - name: Build Application
+      if: matrix.build_type == 'full' || matrix.build_type == 'client'
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_application.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_application.sh ${{runner.workspace}}/chroot/bin/build_application.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_application.sh
+        sudo -E chroot . /bin/build_application.sh
+
+    - name: Build Domain Server
+      if: matrix.build_type == 'full' || matrix.build_type == 'server'
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_domain_server.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_domain_server.sh ${{runner.workspace}}/chroot/bin/build_domain_server.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_domain_server.sh
+        sudo -E chroot . /bin/build_domain_server.sh
+
+    - name: Build Assignment Client
+      if: matrix.build_type == 'full' || matrix.build_type == 'server'
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_assignment_client.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/configure_cmake.sh ${{runner.workspace}}/chroot/bin/build_assignment_client.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_assignment_client.sh
+        sudo -E chroot . /bin/build_assignment_client.sh
+
+    - name: Build Console
+      if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_console.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_console.sh ${{runner.workspace}}/chroot/bin/build_console.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_console.sh
+        sudo -E chroot . /bin/build_console.sh
+
+    - name: Build Installer
+      if: matrix.build_type != 'android'
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        # Work around GitHub Actions not allowing interactive chroot
+        cat > ${{runner.workspace}}/build_installer.sh <<SCRIPT
+        #!/bin/bash
+        cd /build
+        cmake --build . --config $BUILD_TYPE --target package $CMAKE_BUILD_EXTRA
+        SCRIPT
+        sudo mv ${{runner.workspace}}/build_installer.sh ${{runner.workspace}}/chroot/bin/build_installer.sh
+        sudo chmod +x ${{runner.workspace}}/chroot/bin/build_installer.sh
+
+        echo "Retry code from https://unix.stackexchange.com/a/137639"
+        function fail {
+          echo $1 >&2
+          exit 1
+        }
+
+        function retry {
+          local n=1
+          local max=5
+          local delay=15
+          while true; do
+            "$@" && break || {
+              if [[ $n -lt $max ]]; then
+                ((n++))
+                echo "Command failed. Attempt $n/$max:"
+                sleep $delay;
+              else
+                fail "The command has failed after $n attempts."
+              fi
+            }
+          done
+        }
+        retry sudo -E chroot . /bin/build_installer.sh
+
+    - name: Output system stats
+      if: ${{ always() }}
+      working-directory: ${{runner.workspace}}/chroot
+      shell: bash
+      run: |
+        echo "Disk usage:"
+        df -h
+
+    - name: Upload Artifact
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        if [[ "${{ matrix.build_type }}" == "android" ]]; then
+          cd $GITHUB_WORKSPACE/android
+        fi
+        $PYTHON_EXEC "$GITHUB_WORKSPACE/tools/ci-scripts/upload_to_publish_server.py"
