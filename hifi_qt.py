@@ -156,7 +156,7 @@ endif()
                     u_major = int( distro.major_version() )
 
                     if u_major == 10:
-                        self.qtUrl = 'https://data.moto9000.moe/vircadia_packages/qt5-install-5.15.2-debian-10-amd64.tar.xz'
+                        self.qtUrl = 'https://appimage.moto9000.moe/experimental/things_that_dont_belong_here/qt5-install-5.15.2-debian-10-amd64.tar.xz'
                     elif u_major > 10:
                         self.__no_qt_package_error()
                     else:

@@ -132,8 +132,6 @@ jobs:
         sudo mv ${{runner.workspace}}/configure_cmake.sh ${{runner.workspace}}/chroot/bin/configure_cmake.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/configure_cmake.sh
         sudo -E chroot . /bin/configure_cmake.sh
-        echo "/home/runner/vircadia-files/qt/qt5-install/lib/libQt5Core.so.5"
-        sudo -E chroot . ldd /home/runner/vircadia-files/qt/qt5-install/lib/libQt5Core.so.5
 
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
@@ -148,7 +146,6 @@ jobs:
         SCRIPT
         sudo mv ${{runner.workspace}}/build_application.sh ${{runner.workspace}}/chroot/bin/build_application.sh
         sudo chmod +x ${{runner.workspace}}/chroot/bin/build_application.sh
-        sudo -E chroot . ldd /home/runner/vircadia-files/qt/qt5-install/bin/uic
         sudo -E chroot . /bin/build_application.sh
 
     - name: Build Domain Server
