@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF untagged-048c4dbc7f021224a933
+  REF 11.6.0
   SHA512 e3097dd2db88320982d7da1ddce138839daf3251935909c3998a114aeadd408760b26b2d7c7ee547fb0519895ac1853a45c23df2eecf61135849b080252e9dec
   HEAD_REF master
 )
