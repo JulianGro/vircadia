@@ -72,6 +72,7 @@ jobs:
           fi
           if [ "${{ matrix.os }}" = "self-hosted" ]; then
             echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
+            echo "VCPKG_FORCE_SYSTEM_BINARIES=true" >> $GITHUB_ENV
           fi
           if [ "${{ matrix.build_type }}" = "full"* ]; then
             echo "CMAKE_EXTRA=-DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
