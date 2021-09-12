@@ -138,7 +138,7 @@ jobs:
 
     - name: Install dependencies
       shell: bash
-      if: startsWith(matrix.os, 'ubuntu') || contains(matrix.os, 'Debian')
+      if: startsWith(matrix.os, 'ubuntu') || contains(matrix.os, 'self-hosted')
       run: |
         echo "Installing Python Modules:"
         pip3 install distro || exit 1
