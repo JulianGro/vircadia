@@ -62,15 +62,15 @@ jobs:
         echo "APP_TARGET_NAME=$APP_NAME" >> $GITHUB_ENV
 
         # Linux build variables
-        if [[ "${{ matrix.os }}" = "ubuntu-"* || "${{ matrix.os }}" = *"self-hosted"* ]]; then
+        if [[ "${{ matrix.os }}" = "ubuntu-"* || "${{ matrix.os }}" = "self-hosted" ]]; then
           echo "PYTHON_EXEC=python3" >> $GITHUB_ENV
           echo "INSTALLER_EXT=*" >> $GITHUB_ENV
-          if [ "${{ matrix.os }}" = *"self-hosted"* ]; then
+          if [ "${{ matrix.os }}" = "self-hosted" ]; then
             echo "CMAKE_BUILD_EXTRA=-- -j4" >> $GITHUB_ENV
           else
             echo "CMAKE_BUILD_EXTRA=-- -j3" >> $GITHUB_ENV
           fi
-          if [ "${{ matrix.os }}" = *"self-hosted"* ]; then
+          if [ "${{ matrix.os }}" = "self-hosted" ]; then
             echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
           fi
           if [ "${{ matrix.build_type }}" = "full"* ]; then
