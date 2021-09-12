@@ -46,10 +46,9 @@ jobs:
             #- os: ubuntu-18.04
             #  build_type: android
             #  apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0
-            #- os: ubuntu-20.04
-            #  build_type: full_debian-10_aarch64
-            #  apt-dependencies: debootstrap qemu-user-static qemu-system-arm binfmt-support
-            #  chroot-apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3 build-essential cmake freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libglvnd-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev imagemagick
+            - os: self-hosted, Debian-11, ARM64
+              build_type: full
+              apt-dependencies: qtbase5-dev qtbase5-private-dev qtwebengine5-dev qtwebengine5-dev-tools qtmultimedia5-dev libqt5opengl5-dev qtscript5-dev libqt5scripttools5 libqt5webchannel5-dev libqt5websockets5-dev qtxmlpatterns5-dev-tools qttools5-dev libqt5xmlpatterns5-dev libqt5svg5-dev qml-module-qtwebchannel build-essential cmake curl freeglut3-dev git libasound2 libasound2-dev libdouble-conversion-dev libdrm-dev libfontconfig1 libgl1-mesa-dev libglvnd-dev libharfbuzz-dev libjack-dev libjack0 libnspr4 libnss3 libpcre2-16-0 libpulse0 libsdl2-dev libssl-dev libudev-dev libxcb-xinerama0-dev libxcb-xinput0 libxcomposite1 libxcursor1 libxi-dev libxmu-dev libxrandr-dev libxslt1.1 libxtst6 make mesa-common-dev mesa-utils nodejs npm patchelf python2 python3 python3-distro xdg-user-dirs zlib1g-dev
         fail-fast: false
     runs-on: ${{matrix.os}}
     if: github.event.action != 'labeled' || github.event.label.name == 'rebuild'
@@ -63,10 +62,17 @@ jobs:
         echo "APP_TARGET_NAME=$APP_NAME" >> $GITHUB_ENV
 
         # Linux build variables
-        if [[ "${{ matrix.os }}" = "ubuntu-"* ]]; then
+        if [[ "${{ matrix.os }}" = "ubuntu-"* || "${{ matrix.os }}" = *"Debian"* ]]; then
           echo "PYTHON_EXEC=python3" >> $GITHUB_ENV
           echo "INSTALLER_EXT=*" >> $GITHUB_ENV
-          echo "CMAKE_BUILD_EXTRA=-- -j3" >> $GITHUB_ENV
+          if [ "${{ matrix.os }}" = *"ARM64"* ]; then
+            echo "CMAKE_BUILD_EXTRA=-- -j4" >> $GITHUB_ENV
+          else
+            echo "CMAKE_BUILD_EXTRA=-- -j3" >> $GITHUB_ENV
+          fi
+          if [ "${{ matrix.os }}" = *"Debian-11"* ]; then
+            echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
+          fi
           if [ "${{ matrix.build_type }}" = "full"* ]; then
             echo "CMAKE_EXTRA=-DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
           else
