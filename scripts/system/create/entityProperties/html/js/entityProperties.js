@@ -918,7 +918,6 @@ const GROUPS = [
                 label: "Material Scale",
                 type: "vec2",
                 vec2Type: "xyz",
-                min: 0,
                 step: 0.1,
                 decimals: 4,
                 subLabels: [ "x", "y" ],
@@ -1384,7 +1383,8 @@ const GROUPS = [
             {
                 type: "buttons",
                 buttons: [  { id: "copyRotation", label: "Copy Rotation", className: "secondary", onClick: copyRotationProperty },
-                            { id: "pasteRotation", label: "Paste Rotation", className: "secondary", onClick: pasteRotationProperty } ],
+                            { id: "pasteRotation", label: "Paste Rotation", className: "secondary", onClick: pasteRotationProperty },
+                            { id: "setRotationToZero", label: "Reset Rotation", className: "secondary_red red", onClick: setRotationToZeroProperty }],
                 propertyID: "copyPasteRotation"
             },          
             {
@@ -1875,10 +1875,16 @@ function setCopyPastePositionAndRotationAvailability (selectionLength, islocked)
     
     if (selectionLength > 0 && !islocked) {
         $('#property-copyPastePosition-button-pastePosition').attr('disabled', false);
-        $('#property-copyPasteRotation-button-pasteRotation').attr('disabled', false);           
+        $('#property-copyPasteRotation-button-pasteRotation').attr('disabled', false);
+        if (selectionLength === 1) {
+            $('#property-copyPasteRotation-button-setRotationToZero').attr('disabled', false);
+        } else {
+            $('#property-copyPasteRotation-button-setRotationToZero').attr('disabled', true);
+        }
     } else {
         $('#property-copyPastePosition-button-pastePosition').attr('disabled', true);
-        $('#property-copyPasteRotation-button-pasteRotation').attr('disabled', true);            
+        $('#property-copyPasteRotation-button-pasteRotation').attr('disabled', true);
+        $('#property-copyPasteRotation-button-setRotationToZero').attr('disabled', true);
     }
 }
 
@@ -3274,7 +3280,12 @@ function pasteRotationProperty() {
         action: "pasteRotation"
     }));    
 }
-
+function setRotationToZeroProperty() {
+    EventBridge.emitWebEvent(JSON.stringify({
+        type: "action",
+        action: "setRotationToZero"
+    }));    
+}
 /**
  * USER DATA FUNCTIONS
  */

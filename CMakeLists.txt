@@ -57,7 +57,7 @@ MESSAGE(STATUS "GLES_OPTION: ${GLES_OPTION}")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/macros/TargetPython.cmake")
 target_python()
 
-if (WIN32 AND NOT HIFI_ANDROID)
+if (WIN32 AND NOT HIFI_ANDROID AND NOT (CMAKE_GENERATOR STREQUAL "Ninja"))
     # Force x64 toolset
     set(CMAKE_GENERATOR_TOOLSET "host=x64" CACHE STRING "64-bit toolset" FORCE)
 endif()
@@ -337,6 +337,13 @@ if (BUILD_GPU_FRAME_PLAYER_ONLY)
     add_subdirectory(tools/gpu-frame-player)
 else()
 
+if (SCREENSHARE)
+  add_subdirectory(screenshare)
+endif()
+
+# BUILD_TOOLS option will be handled inside the tools's CMakeLists.txt because 'scribe' tool is required for build anyway
+add_subdirectory(tools)
+
 # add subdirectories for all targets
 if (BUILD_SERVER)
   add_subdirectory(assignment-client)
@@ -362,13 +369,6 @@ if (BUILD_CLIENT OR BUILD_SERVER)
   add_subdirectory(plugins)
   add_subdirectory(server-console)
 endif()
-
-if (SCREENSHARE)
-  add_subdirectory(screenshare)
-endif()
-
-# BUILD_TOOLS option will be handled inside the tools's CMakeLists.txt because 'scribe' tool is required for build anyway
-add_subdirectory(tools)
 
 endif()
 
