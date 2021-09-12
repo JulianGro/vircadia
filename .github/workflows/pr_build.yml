@@ -71,7 +71,7 @@ jobs:
           else
             echo "CMAKE_BUILD_EXTRA=-- -j3" >> $GITHUB_ENV
           fi
-          if [ "${{ matrix.os }}" = "self-hosted"*"aarch64" ]; then
+          if [ "${{ matrix.os }}" = *"aarch64"* ]; then
             echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
             echo "VCPKG_FORCE_SYSTEM_BINARIES=true" >> $GITHUB_ENV
           fi
