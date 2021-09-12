@@ -62,7 +62,7 @@ jobs:
         echo "APP_TARGET_NAME=$APP_NAME" >> $GITHUB_ENV
 
         # Linux build variables
-        if [[ "${{ matrix.os }}" = "ubuntu-"* || "${{ matrix.os }}" = *"Debian"* ]]; then
+        if [[ "${{ matrix.os }}" = "ubuntu-"* || "${{ matrix.os }}" = *"self-hosted"* ]]; then
           echo "PYTHON_EXEC=python3" >> $GITHUB_ENV
           echo "INSTALLER_EXT=*" >> $GITHUB_ENV
           if [ "${{ matrix.os }}" = *"self-hosted"* ]; then
@@ -269,3 +269,7 @@ jobs:
           cd $GITHUB_WORKSPACE/android
         fi
         $PYTHON_EXEC "$GITHUB_WORKSPACE/tools/ci-scripts/upload_to_publish_server.py"
+
+
+# TODO: Add labels to runner.
+#       Switch If statements to proper labels.
