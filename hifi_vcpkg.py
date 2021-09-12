@@ -108,7 +108,7 @@ endif()
                 self.prebuiltArchive = self.assets_url + "/dependencies/vcpkg/builds/vcpkg-osx.tgz%3FversionId=6JrIMTdvpBF3MAsjA92BMkO79Psjzs6Z"
         elif 'Linux' == system and 'aarch64' == machine:
             self.exe = os.path.join(self.path, 'vcpkg')
-            self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics', '--debug' ]
+            self.bootstrapCmds = [ os.path.join(self.path, 'bootstrap-vcpkg.sh'), '-disableMetrics' ]
             self.vcpkgUrl = 'http://motofckr9k.ddns.net/vircadia_packages/vcpkg_workaround_aarch64.tar.gz'
             self.vcpkgHash = '573630e9900c07e61f3f5f299e2d88b0f1de7c757cc31bebe6fc934256f120af885ef5bae50c617a6ccb1b46b7a19c2ddff2a0adea8bc9013b4ecaf7b4098d33'
             self.hostTriplet = 'arm64-linux'
@@ -255,7 +255,7 @@ endif()
         print("Installing host tools")
         if (self.vcpkgBuildType):
             self.copyTripletForBuildType(self.hostTriplet)
-        self.run(['install', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
+        self.run(['install', '--debug', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
 
         # If not android, install the hifi-client-deps libraries
         if not self.args.android:
