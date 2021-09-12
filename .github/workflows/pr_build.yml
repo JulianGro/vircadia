@@ -149,13 +149,16 @@ jobs:
 
         echo "Installing apt packages"
         sudo apt install -y ${{ matrix.apt-dependencies }} || exit 1
+
     - name: Create Build Environment
       shell: bash
       run: cmake -E make_directory "${{runner.workspace}}/build"
+
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVCPKG_BUILD_TYPE=release $CMAKE_EXTRA
+
     - name: Compress cmake logs
       if: always()
       shell: bash
