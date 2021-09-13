@@ -256,9 +256,9 @@ endif()
         print("Installing host tools")
         if (self.vcpkgBuildType):
             self.copyTripletForBuildType(self.hostTriplet)
-        self.run(['install', '--feature-flags=-compilertracking', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
+        #self.run(['install', '--feature-flags=-compilertracking', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
         #self.run(['install', '--debug', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
-        #self.run(['install', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
+        self.run(['install', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
 
         # If not android, install the hifi-client-deps libraries
         if not self.args.android:
