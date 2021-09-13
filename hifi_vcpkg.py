@@ -216,7 +216,8 @@ endif()
         self.copyEnv()
 
     def run(self, commands):
-        actualCommands = ['strace', self.exe, '--vcpkg-root', self.path]
+        #actualCommands = ['strace', self.exe, '--vcpkg-root', self.path]
+        actualCommands = [self.exe, '--vcpkg-root', self.path]
         actualCommands.extend(commands)
         print("Running command")
         print(actualCommands)
@@ -256,7 +257,7 @@ endif()
         if (self.vcpkgBuildType):
             self.copyTripletForBuildType(self.hostTriplet)
         #self.run(['install', '--feature-flags=-compilertracking', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
-        self.run(['install', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
+        self.run(['install', '--debug', '--triplet', self.getTripletWithBuildType(self.hostTriplet), 'hifi-host-tools'])
 
         # If not android, install the hifi-client-deps libraries
         if not self.args.android:
