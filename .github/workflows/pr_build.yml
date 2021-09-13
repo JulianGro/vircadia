@@ -74,7 +74,6 @@ jobs:
           if [ "${{ matrix.os }}" = "self-hosted_debian-11_aarch64" ]; then
             echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
             echo "VCPKG_FORCE_SYSTEM_BINARIES=true" >> $GITHUB_ENV
-            echo "HIFI_VCPKG_BASE=/tmp/github-runner-JulianGro-vircadia/vircadia-files/vcpkg" >> $GITHUB_ENV
           fi
           if [ "${{ matrix.build_type }}" = "full"* ]; then
             echo "CMAKE_EXTRA=-DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
@@ -172,6 +171,7 @@ jobs:
         fi
 
         find "$HOME/vircadia-files/vcpkg" -name '*log' -type f -print0 | $TAR --null --force-local -T - -c --xz -v -f "${{ runner.workspace }}/cmake-logs-${{ matrix.os }}-${{ github.event.number }}.tar.xz"
+
     - name: Archive cmake logs
       if: always()
       uses: actions/upload-artifact@v2
@@ -179,26 +179,31 @@ jobs:
         name: cmake-logs-${{ matrix.os }}-${{ github.event.number }}.tar.xz
         path: ${{ runner.workspace }}/cmake-logs-${{ matrix.os }}-${{ github.event.number }}.tar.xz
         if-no-files-found: error
+
     - name: Build Application
       if: matrix.build_type == 'full' || matrix.build_type == 'client'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target $APP_TARGET_NAME $CMAKE_BUILD_EXTRA
+
     - name: Build Domain Server
       if: matrix.build_type == 'full'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target domain-server $CMAKE_BUILD_EXTRA
+
     - name: Build Assignment Client
       if: matrix.build_type == 'full'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target assignment-client $CMAKE_BUILD_EXTRA
+
     - name: Build Console
       if: matrix.build_type == 'full' || matrix.os == 'windows-latest'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target packaged-server-console $CMAKE_BUILD_EXTRA
+
     - name: Build Installer
       if: matrix.build_type != 'android'
       working-directory: ${{runner.workspace}}/build
