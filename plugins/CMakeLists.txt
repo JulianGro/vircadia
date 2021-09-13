@@ -32,8 +32,12 @@ if (NOT SERVER_ONLY AND NOT ANDROID)
   add_subdirectory(${DIR})
   set(DIR "hifiKinect")
   add_subdirectory(${DIR})
-  set(DIR "steamClient")
-  add_subdirectory(${DIR})
+
+  if (NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(DIR "steamClient")
+    add_subdirectory(${DIR})
+  endif()
+
   set(DIR "hifiLeapMotion")
   add_subdirectory(${DIR})
 
