@@ -216,8 +216,8 @@ endif()
         self.copyEnv()
 
     def run(self, commands):
-        actualCommands = ['strace', self.exe, '--vcpkg-root', self.path]
-        #actualCommands = [self.exe, '--vcpkg-root', self.path]
+        #actualCommands = ['strace', self.exe, '--vcpkg-root', self.path]
+        actualCommands = [self.exe, '--vcpkg-root', self.path]
         actualCommands.extend(commands)
         print("Running command")
         print(actualCommands)
