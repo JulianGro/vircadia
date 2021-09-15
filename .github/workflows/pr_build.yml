@@ -74,7 +74,8 @@ jobs:
           if [ "${{ matrix.os }}" = "self-hosted_debian-11_aarch64" ]; then
             echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
             echo "VCPKG_FORCE_SYSTEM_BINARIES=true" >> $GITHUB_ENV
-            echo "HIFI_VCPKG_PATH=${{runner.workspace}}/vircadia-files/vcpkg/" >> $GITHUB_ENV
+            echo "CI_BUILD=true" >> $GITHUB_ENV
+            echo "CI_WORKSPACE=${{runner.workspace}}" >> $GITHUB_ENV
           fi
           if [ "${{ matrix.build_type }}" = "full"* ]; then
             echo "CMAKE_EXTRA=-DBUILD_TOOLS:BOOLEAN=FALSE -DHIFI_PYTHON_EXEC:FILEPATH=$(which python3)" >> $GITHUB_ENV
