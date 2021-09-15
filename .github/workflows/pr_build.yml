@@ -130,7 +130,7 @@ jobs:
         fi
 
     - name: Clear Working Directory
-      if: startsWith(matrix.os, 'windows') || matrix.os == 'self-hosted_debian-11_aarch64')
+      if: startsWith(matrix.os, 'windows') || matrix.os == 'self-hosted_debian-11_aarch64'
       shell: bash
       working-directory: ${{runner.workspace}}
       run: rm -rf ./*
