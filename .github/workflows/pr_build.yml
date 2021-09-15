@@ -74,7 +74,6 @@ jobs:
           if [ "${{ matrix.os }}" = "self-hosted_debian-11_aarch64" ]; then
             echo "VIRCADIA_USE_SYSTEM_QT=true" >> $GITHUB_ENV
             echo "VCPKG_FORCE_SYSTEM_BINARIES=true" >> $GITHUB_ENV
-            echo "CI_BUILD=true" >> $GITHUB_ENV
             echo "CI_WORKSPACE=${{runner.workspace}}" >> $GITHUB_ENV
           fi
           if [ "${{ matrix.build_type }}" = "full"* ]; then
@@ -172,7 +171,11 @@ jobs:
           TAR=tar
         fi
 
-        find "$HOME/vircadia-files/vcpkg" -name '*log' -type f -print0 | $TAR --null --force-local -T - -c --xz -v -f "${{ runner.workspace }}/cmake-logs-${{ matrix.os }}-${{ github.event.number }}.tar.xz"
+        if [ ${{ env.CI_WORKSPACE }} ]; then
+          find "$CI_WORKSPACE/vircadia-files/vcpkg" -name '*log' -type f -print0 | $TAR --null --force-local -T - -c --xz -v -f "${{ runner.workspace }}/cmake-logs-${{ matrix.os }}-${{ github.event.number }}.tar.xz"
+        else
+          find "$HOME/vircadia-files/vcpkg" -name '*log' -type f -print0 | $TAR --null --force-local -T - -c --xz -v -f "${{ runner.workspace }}/cmake-logs-${{ matrix.os }}-${{ github.event.number }}.tar.xz"
+        fi
 
     - name: Archive cmake logs
       if: always()
