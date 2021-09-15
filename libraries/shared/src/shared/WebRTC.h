@@ -23,11 +23,11 @@
 // I don't yet have a working libwebrtc for android
 // #  define WEBRTC_ENABLED 1
 // #  define WEBRTC_POSIX 1
-#elif defined(Q_OS_LINUX && Q_PROCESSOR_X86_64)
+#elif defined(Q_OS_LINUX) && defined(Q_PROCESSOR_X86_64)
 #  define WEBRTC_ENABLED 1
 #  define WEBRTC_POSIX 1
 #elif
-#elif defined(Q_OS_LINUX && Q_PROCESSOR_ARM)
+#elif defined(Q_OS_LINUX) && defined(Q_PROCESSOR_ARM)
 // WebRTC is basically impossible to build on aarch64 Linux.
 // I am looking at https://gitlab.freedesktop.org/pulseaudio/webrtc-audio-processing for an alternative.
 // #  define WEBRTC_ENABLED 1
