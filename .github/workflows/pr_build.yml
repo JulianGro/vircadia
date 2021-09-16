@@ -38,8 +38,8 @@ jobs:
               build_type: full
             - os: macOS-latest
               build_type: full
-            #- os: macOS-latest
-            #  build_type: client
+            - os: macOS-latest
+              build_type: client
             - os: ubuntu-18.04
               build_type: full
               apt-dependencies: mesa-common-dev libegl1 libglvnd-dev libdouble-conversion1 libpulse0 libsnappy1v5 libwebpdemux2 libwebpmux3
