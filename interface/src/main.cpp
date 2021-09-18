@@ -91,7 +91,7 @@ int main(int argc, const char* argv[]) {
     QCommandLineOption defaultScriptOverrideOption("defaultScriptsOverride", "override defaultsScripts.js", "string");
     QCommandLineOption forceCrashReportingOption("forceCrashReporting", "Force crash reporting to initialize");
 
-    QCommandLineOption concurrentDownloadsStr("concurrent-downloads", "", "Maximum concurrent resource downloads. Default is 16.");
+    QCommandLineOption concurrentDownloadsStr("concurrent-downloads", "Maximum concurrent resource downloads. Default is 16.", "value");
 
     parser.addOption(urlOption);
     parser.addOption(noLauncherOption);
