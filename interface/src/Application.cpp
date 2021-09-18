@@ -1486,10 +1486,13 @@ Application::Application(int& argc, char** argv, QElapsedTimer& startupTimer, bo
     connect(&_entityEditSender, &EntityEditPacketSender::packetSent, this, &Application::packetSent);
     connect(&_entityEditSender, &EntityEditPacketSender::addingEntityWithCertificate, this, &Application::addingEntityWithCertificate);
 
-    QString concurrentDownloadsStr = getCmdOption(argc, constArgv, "--concurrent-downloads");
+    qDebug() << "Right before parser.isSet";
+    QString concurrentDownloadsStr = parser.isSet(concurrentDownloads);
+        qDebug() << "parser.isSet done";
     bool success;
     uint32_t concurrentDownloads = concurrentDownloadsStr.toUInt(&success);
     if (!success) {
+        qDebug() << "concurrentDownloadsStr could not be converted to Int";
         concurrentDownloads = MAX_CONCURRENT_RESOURCE_DOWNLOADS;
     }
     ResourceCache::setRequestLimit(concurrentDownloads);
