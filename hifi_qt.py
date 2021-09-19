@@ -147,7 +147,7 @@ endif()
                     u_minor = int( distro.minor_version() )
 
                     if u_major == 18:
-                        self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz'
+                        self.qtUrl = 'https://motofckr9k.ddns.net/vircadia_packages/qt5-install-5.15.2-ubuntu-18.04-amd64-size-optimized.tar.xz'
                     elif u_major > 19:
                         self.__no_qt_package_error()
                     else:

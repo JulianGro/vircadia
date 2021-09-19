@@ -219,15 +219,15 @@ cd qt5-build
 
 amd64:
 ```bash
-../qt5/configure -ltcg -optimize-size -force-debug-info -release -opensource -confirm-license -platform linux-g++-64 -opengl desktop -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-egl -no-icu -prefix ../qt5-install
+../qt5/configure -optimize-size -force-debug-info -release -opensource -confirm-license -platform linux-g++-64 -opengl desktop -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-egl -no-icu -prefix ../qt5-install
 ```
-We use `-ltcg` and `-optimize-size` to get a smaller Qt package and AppImages created using that package.
+We use `-optimize-size` to get a smaller Qt package and AppImages created using that package.
 If libX11 or libGL aren't found, you will need to manually provide those locations. Search for `libX11.so` and `libGL.so` respectively and provide paths to their folders inside `qt5/qtbase/mkspecs/linux-g++-64/qmake.conf`.
 On Ubuntu 18.04 both are in `/usr/lib/x86_64-linux-gnu`
 
 aarch64:
 ```bash
-../qt5/configure -ltcg -optimize-size -force-debug-info -release -opensource -confirm-license -platform linux-g++ -opengl es2 -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-icu -prefix ../qt5-install
+../qt5/configure -optimize-size -force-debug-info -release -opensource -confirm-license -platform linux-g++ -opengl es2 -recheck-all -nomake tests -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors -no-pch -no-icu -prefix ../qt5-install
 ```
 You can accelerate the build process by installing some of the optional system dependencies. E.g.:
 ```bash
