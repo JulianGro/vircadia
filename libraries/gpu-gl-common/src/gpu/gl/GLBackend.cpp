@@ -155,7 +155,7 @@ void GLBackend::init() {
 #if defined(Q_OS_ANDROID) || defined(USE_GLES) || defined(Q_OS_DARWIN)
         qCDebug(gpugllogging) << "Automatic texture memory not supported in this configuration";
         _videoCard = Unknown;
-        _dedicatedMemory = gpu->getMemory();
+        _dedicatedMemory = gpu->getMemory() * BYTES_PER_MIB;
         _totalMemory = _dedicatedMemory;
 #endif
 
@@ -195,7 +195,7 @@ void GLBackend::init() {
         } else {
             qCCritical(gpugllogging) << "Don't know how to get memory for OpenGL vendor " << vendor << "; renderer " << renderer << ", trying fallback";
             _videoCard = Unknown;
-            _dedicatedMemory = gpu->getMemory();
+            _dedicatedMemory = gpu->getMemory() * BYTES_PER_MIB;
             _totalMemory = _dedicatedMemory;
         }
 #endif
