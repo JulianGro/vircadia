@@ -151,13 +151,17 @@ void GLBackend::init() {
         GPUIdent* gpu = GPUIdent::getInstance(vendor, renderer);
         unsigned int mem;
 
-        if (vendor.contains("NVIDIA") ) {
-            qCDebug(gpugllogging) << "NVIDIA card detected";
 // Do not try to get texture memory information on unsupported systems.
 #if defined(Q_OS_ANDROID) || defined(USE_GLES) || defined(Q_OS_DARWIN)
-            qCDebug(gpugllogging) << "Automatic texture memory not supported in this configuration";
-            continue
+        qCDebug(gpugllogging) << "Automatic texture memory not supported in this configuration";
+        _videoCard = Unknown;
+        _dedicatedMemory = gpu->getMemory();
+        _totalMemory = _dedicatedMemory;
 #endif
+
+#if !defined(Q_OS_ANDROID) && !defined(USE_GLES) && !defined(Q_OS_DARWIN)
+        if (vendor.contains("NVIDIA") ) {
+            qCDebug(gpugllogging) << "NVIDIA card detected";
 
             GL_GET_INTEGER(GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX);
             GL_GET_INTEGER(GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX);
@@ -174,10 +178,6 @@ void GLBackend::init() {
 
         } else if (vendor.contains("ATI")) {
             qCDebug(gpugllogging) << "ATI card detected";
-#if defined(Q_OS_ANDROID) || defined(USE_GLES) || defined(Q_OS_DARWIN)
-            qCDebug(gpugllogging) << "Automatic texture memory not supported in this configuration";
-            continue
-#endif
 
             GL_GET_INTEGER(TEXTURE_FREE_MEMORY_ATI);
 
@@ -198,6 +198,7 @@ void GLBackend::init() {
             _dedicatedMemory = gpu->getMemory();
             _totalMemory = _dedicatedMemory;
         }
+#endif
 
         qCDebug(gpugllogging) << "dedicated: " << _dedicatedMemory;
         qCDebug(gpugllogging) << "total: " << _totalMemory;
