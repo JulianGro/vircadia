@@ -181,6 +181,7 @@ void GLBackend::init() {
 
             GL_GET_INTEGER(TEXTURE_FREE_MEMORY_ATI);
 
+            // We are actually getting free memory instead of total memory
             _totalMemory = TEXTURE_FREE_MEMORY_ATI * BYTES_PER_KIB;
             _dedicatedMemory = _totalMemory;
             _videoCard = ATI;
