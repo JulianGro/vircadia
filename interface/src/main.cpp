@@ -225,8 +225,7 @@ int main(int argc, const char* argv[]) {
     bool isCrashHandlerEnabled = ual.isCrashMonitorEnabled() || parser.isSet(forceCrashReportingOption);
     qDebug() << "Crash handler logger is enabled:" << isCrashHandlerEnabled;
     if (isCrashHandlerEnabled) {
-        qDebug() << QCoreApplication::applicationDirPath();
-        auto crashHandlerStarted = startCrashHandler(QCoreApplication::applicationDirPath().QString::toStdString());
+        auto crashHandlerStarted = startCrashHandler(argv[0]);
         qDebug() << "Crash handler started:" << crashHandlerStarted;
     }
 
