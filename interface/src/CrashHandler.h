@@ -14,12 +14,11 @@
 
 #include <string>
 #include <QCoreApplication>
-#include <QtCore/QString>
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(crash_handler)
 
-bool startCrashHandler(QString appPath);
+bool startCrashHandler(std::string appPath);
 void setCrashAnnotation(std::string name, std::string value);
 void startCrashHookMonitor(QCoreApplication* app);
 

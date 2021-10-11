@@ -24,7 +24,6 @@ Q_LOGGING_CATEGORY(crash_handler, "vircadia.crash_handler")
 #include <QtCore/QDeadlineTimer>
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
-#include <QtCore/QString>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -346,7 +345,7 @@ static QString findBinaryDir() {
     return QString();
 }
 
-bool startCrashHandler(QString appPath) {
+bool startCrashHandler(std::string appPath) {
     if (BACKTRACE_URL.empty() || BACKTRACE_TOKEN.empty()) {
         qCCritical(crash_handler) << "Backtrace URL or token not set, crash handler disabled.";
         return false;

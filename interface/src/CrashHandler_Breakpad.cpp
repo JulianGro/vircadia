@@ -21,7 +21,6 @@
 #include <QDebug>
 #include <QMap>
 #include <QtCore/QFileInfo>
-#include <QtCore/QString>
 #include <QtAndroidExtras/QAndroidJniObject>
 
 #include <BuildInfo.h>
@@ -58,7 +57,7 @@ void flushAnnotations() {
     settings.sync();
 }
 
-bool startCrashHandler(QString appPath) {
+bool startCrashHandler(std::string appPath) {
     annotations["version"] = BuildInfo::VERSION;
     annotations["build_number"] = BuildInfo::BUILD_NUMBER;
     annotations["build_type"] = BuildInfo::BUILD_TYPE_STRING;
