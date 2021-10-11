@@ -346,7 +346,7 @@ static QString findBinaryDir() {
     return QString();
 }
 
-bool startCrashHandler(std::string appPath) {
+bool startCrashHandler(QString appPath) {
     if (BACKTRACE_URL.empty() || BACKTRACE_TOKEN.empty()) {
         qCCritical(crash_handler) << "Backtrace URL or token not set, crash handler disabled.";
         return false;

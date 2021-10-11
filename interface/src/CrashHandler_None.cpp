@@ -16,11 +16,12 @@
 #include <assert.h>
 
 #include <QDebug>
+#include <QtCore/QString>
 
 
 Q_LOGGING_CATEGORY(crash_handler, "vircadia.crash_handler")
 
-bool startCrashHandler(std::string appPath) {
+bool startCrashHandler(QString appPath) {
     qCWarning(crash_handler) << "No crash handler available.";
     return false;
 }
