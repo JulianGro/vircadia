@@ -24,6 +24,7 @@ Q_LOGGING_CATEGORY(crash_handler, "vircadia.crash_handler")
 #include <QtCore/QDeadlineTimer>
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QString>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
