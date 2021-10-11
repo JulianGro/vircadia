@@ -20,6 +20,7 @@
 #include <QLocalServer>
 #include <QSharedMemory>
 #include <QTranslator>
+#include <QString>
 
 #include <BuildInfo.h>
 #include <SandboxUtils.h>
@@ -224,7 +225,7 @@ int main(int argc, const char* argv[]) {
     bool isCrashHandlerEnabled = ual.isCrashMonitorEnabled() || parser.isSet(forceCrashReportingOption);
     qDebug() << "Crash handler logger is enabled:" << isCrashHandlerEnabled;
     if (isCrashHandlerEnabled) {
-        auto crashHandlerStarted = startCrashHandler(QCoreApplication::applicationDirPath);
+        auto crashHandlerStarted = startCrashHandler(QCoreApplication::applicationDirPath());
         qDebug() << "Crash handler started:" << crashHandlerStarted;
     }
 
