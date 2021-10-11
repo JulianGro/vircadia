@@ -10,6 +10,7 @@
 
 #include <thread>
 
+#include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QtCore/QProcess>
 #include <QDebug>
@@ -223,7 +224,7 @@ int main(int argc, const char* argv[]) {
     bool isCrashHandlerEnabled = ual.isCrashMonitorEnabled() || parser.isSet(forceCrashReportingOption);
     qDebug() << "Crash handler logger is enabled:" << isCrashHandlerEnabled;
     if (isCrashHandlerEnabled) {
-        auto crashHandlerStarted = startCrashHandler(argv[0]);
+        auto crashHandlerStarted = startCrashHandler(QCoreApplication::applicationDirPath());
         qDebug() << "Crash handler started:" << crashHandlerStarted;
     }
 
