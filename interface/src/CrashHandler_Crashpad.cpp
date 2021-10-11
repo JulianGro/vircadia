@@ -385,7 +385,7 @@ bool startCrashHandler(std::string appPath) {
         interfaceDir.setPath(binaryDir);
     } else {
         qCDebug(crash_handler) << "Locating own directory by argv[0]";
-        interfaceDir.setPath(QString::fromStdString(appPath).absoluteFilePath);
+        interfaceDir.setPath(QString::fromStdString(appPath).QDir::absoluteFilePath);
     }
 
     if (!interfaceDir.exists(CRASHPAD_HANDLER_NAME)) {
