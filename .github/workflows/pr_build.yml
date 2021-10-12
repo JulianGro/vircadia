@@ -153,7 +153,7 @@ jobs:
         else # macOS
           echo "Installing MacOSX10.12 SDK"
           curl -O https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
-          gtar -xf MacOSX10.12.sdk.tar.xz
+          p7zip -d MacOSX10.12.sdk.tar.xz
           cp -rp MacOSX10.12.sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
         fi
 
