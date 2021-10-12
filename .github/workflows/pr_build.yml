@@ -151,12 +151,13 @@ jobs:
           echo "Installing apt packages"
           sudo apt install -y ${{ matrix.apt-dependencies }} || exit 1
         else # macOS
-          echo "Downloading MacOSX10.12 SDK"
+          echo "Downloading MacOSX10.12 SDK.."
           curl --progress-bar -L -O https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
-          echo "Extracting MacOSX10.12 SDK"
+          echo "Extracting MacOSX10.12 SDK.."
           tar -xf MacOSX10.12.sdk.tar.xz
-          echo "Installing MacOSX10.12 SDK"
-          sudo cp -rp MacOSX10.12.sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/ || exit 1
+          echo "Installing MacOSX10.12 SDK.."
+          # cp always sets an error code while copying the SDK so we return ":" (no op) when that happens.
+          sudo cp -rp MacOSX10.12.sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/ || exit :
         fi
 
     - name: Create Build Environment
