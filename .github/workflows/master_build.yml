@@ -126,6 +126,7 @@ jobs:
           tar -xf MacOSX10.12.sdk.tar.xz
           cp -rp MacOSX10.12.sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/ || exit 1
         fi
+        exit 0
 
     - name: Install Python modules
       if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macOS')
