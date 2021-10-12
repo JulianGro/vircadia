@@ -141,7 +141,7 @@ jobs:
       shell: bash
       if: startsWith(matrix.os, 'ubuntu') || contains(matrix.os, 'debian') || startsWith(matrix.os, 'macOS')
       run: |
-        if [["${{ matrix.os }}" ~= "ubuntu" || "${{ matrix.os }}" ~= "debian"]]; then
+        if [[ "${{ matrix.os }}" =~ "ubuntu" || "${{ matrix.os }}" =~ "debian" ]]; then
           echo "Installing Python Modules:"
           pip3 install distro || exit 1
 
