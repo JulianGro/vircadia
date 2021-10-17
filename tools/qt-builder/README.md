@@ -302,9 +302,10 @@ git submodule update
 
 #### Configuring
 ```bash
+cd ../.. 
 mkdir qt5-install
 mkdir qt5-build
-cd ../qt5-build
+cd qt5-build
 ```
 
 ```bash
