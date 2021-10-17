@@ -288,13 +288,10 @@ Plain Qt 5.15.2 cannot actually be built on it's only supported configuration. T
 ```bash
 cd qt5/qtwebengine
 git pull git://code.qt.io/qt/qtwebengine.git 5.15.6
-cd src/3rdparty
 ```
 This doesn't seem to update the submodule, so we do that here.
 By standard this gets the newest version of qtwebengine-chromium. At time of writing this is `9f71911e38c041cedc5291c5e772b7d03ce8b8c8`.
-/ Directly updating might fail, which is why we clear the directory first.
 ```bash
-#rm -rf src/3rdparty
 git submodule update
 ```
 
