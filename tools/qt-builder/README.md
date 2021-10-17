@@ -317,7 +317,7 @@ cd qt5-build
 ```
 
 #### Make
-Important: Building Qt using multiple threads needs a lot of system memory. You should have around 1.5GiB available per thread you want ot use.
+Important: Building Qt using multiple threads needs a lot of system memory in later stages of the process. You should have around 1.5GiB available per thread you intend to use.
 ```bash
 NINJAFLAGS='-j4'  make -j4
 ```
