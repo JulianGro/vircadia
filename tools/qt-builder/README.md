@@ -57,6 +57,7 @@ Install in C:\Jom and add directory to PATH.
 
 ### Linux
 1.  qt5 requirements
+
 On Ubuntu based systems you can just have apt install the dependencies for the qt5-default package:
 Edit /etc/apt/sources.list (edit as root) and uncomment all source repositories by replacing all `# deb-src` with `deb-src`.
 ```bash
