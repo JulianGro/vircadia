@@ -279,7 +279,6 @@ tar -Jcvf qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz qt5-install
 
 
 ### Mac
-
 #### Preparing source files
 ```bash
 git clone --recursive git://code.qt.io/qt/qt5.git -b 5.15.2 --single-branch
@@ -301,6 +300,11 @@ git submodule update
 
 
 #### Configuring
+Note: If you run into any issues with Qt on macOS, take a look at what our friends at macports are doing. 
+- https://github.com/macports/macports-ports/tree/master/aqua/qt5/files
+- https://trac.macports.org/query?status=accepted&status=assigned&status=closed&status=new&status=reopened&port=~qt5&desc=1&order=id
+
+
 ```bash
 cd ../.. 
 mkdir qt5-install
@@ -313,6 +317,7 @@ cd qt5-build
 ```
 
 #### Make
+Important: Building Qt using multiple threads needs a lot of system memory. You should have around 1.5GiB available per thread you want ot use.
 ```bash
 NINJAFLAGS='-j4'  make -j4
 ```
