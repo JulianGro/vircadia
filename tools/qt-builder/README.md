@@ -288,8 +288,17 @@ git clone --recursive git://code.qt.io/qt/qt5.git -b 5.15.2 --single-branch
 Plain Qt 5.15.2 cannot actually be built on it's only supported configuration. To fix this, we will use QtWebEngine from Qt 5.15.6.
 
 ```bash
+cd qt5/qtwebengine
+git pull git://code.qt.io/qt/qtwebengine.git 5.15.6
+```
+
+#############################################################################
+```bash
+cd qt5
+rm -r qtwebengine
 git clone --recursive git://code.qt.io/qt/qtwebengine.git -b 5.15.6 --single-branch
 ```
+
 
 *  If you are compiling with MacOSX11.1.SDK or greater, edit qt5/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py line 91 and replace "MacOSX(10" with "MacOSX(11".
 
