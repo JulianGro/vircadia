@@ -280,20 +280,38 @@ tar -Jcvf qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz qt5-install
 ### Mac
 
 #### Preparing source files
+```bash
 git clone --recursive git://code.qt.io/qt/qt5.git -b 5.15.2 --single-branch
+```
+
+Plain Qt 5.15.2 cannot actually be built on it's only supported configuration. To fix this, we will use QtWebEngine from Qt 5.15.6.
+
+```bash
+git clone --recursive git://code.qt.io/qt/qtwebengine.git -b 5.15.6 --single-branch
+```
 
 *  If you are compiling with MacOSX11.1.SDK or greater, edit qt5/qtwebengine/src/3rdparty/chromium/build/mac/find_sdk.py line 91 and replace "MacOSX(10" with "MacOSX(11".
 
 #### Configuring
-`mkdir qt5-install`
-`mkdir qt5-build`
-`cd ../qt5-build`
+```bash
+mkdir qt5-install
+mkdir qt5-build
+cd ../qt5-build
+```
 
-`../configure -force-debug-info -opensource -confirm-license -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -nomake examples -nomake tests -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -no-warnings-are-errors  -no-pch -prefix ../qt5-install`
+```bash
+../configure -force-debug-info -release -opensource -confirm-license -qt-zlib -qt-libjpeg -qt-libpng -qt-freetype -qt-pcre -qt-harfbuzz -recheck-all -nomake tests  -nomake examples -skip qttranslations -skip qtserialport -skip qt3d -skip qtlocation -skip qtwayland -skip qtsensors -skip qtgamepad -skip qtcharts -skip qtx11extras -skip qtmacextras -skip qtvirtualkeyboard -skip qtpurchasing -skip qtdatavis3d -skip qtlottie -skip qtquick3d -skip qtpim -skip qtdocgallery -no-warnings-are-errors  -no-pch -no-egl -no-icu -prefix ../qt5-install
+```
 
 #### Make
-`make`
-`make install`
+```bash
+NINJAFLAGS='-j4'  make -j4
+```
+
+The Qt documentation states that using more than one thread on the install step can cause problems on macOS.
+```bash
+make -j1 install 
+```
 
 #### Fixing
 1.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
