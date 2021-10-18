@@ -208,6 +208,9 @@ endif()
             print ('Downloading Qt from AWS')
             print('Extracting ' + self.qtUrl + ' to ' + self.path)
             hifi_utils.downloadAndExtract(self.qtUrl, self.path)
+            if 'Darwin' == system:
+                print('Allowing use of QtWebEngine >5.15.2')
+                self.__allow_newer_qtwebengine()
         else:
             print ('Qt has already been downloaded')
 
@@ -247,3 +250,35 @@ endif()
         hifi_utils.color('clear')
         print('')
         raise hifi_utils.SilentFatalError(2)
+
+    def __allow_newer_qtwebengine(self):
+        print("Patching QtWebEngine")
+        search_text = "5.15.6 ${_Qt5WebEngine_FIND_VERSION_EXACT}"
+        replace_text = "5.15.2 ${_Qt5WebEngine_FIND_VERSION_EXACT}"
+        with open(f"{self.fullPath}/lib/cmake/Qt5WebEngine/Qt5WebEngineConfig.cmake", "r") as file:
+            data = file.read()
+            data = data.replace(search_text, replace_text)
+        with open(f"{self.fullPath}/lib/cmake/Qt5WebEngine/Qt5WebEngineCConfig.cmake", 'w') as file:
+            file.write(data)
+        print("Patched QtWebEngine")
+
+        print("Patching QtWebEngineCore")
+        search_text = "5.15.6 ${_Qt5WebEngineCore_FIND_VERSION_EXACT}"
+        replace_text = "5.15.2 ${_Qt5WebEngineCore_FIND_VERSION_EXACT}"
+        with open(f"{self.fullPath}/lib/cmake/Qt5WebEngineCore/Qt5WebEngineCoreConfig.cmake", "r") as file:
+
+            data = file.read()
+            data = data.replace(search_text, replace_text)
+        with open(f"{self.fullPath}/lib/cmake/Qt5WebEngineCore/Qt5WebEngineCoreConfig.cmake", 'w') as file:
+            file.write(data)
+        print("Patched QtWebEngineCore")
+
+        print("Patching QtWebEngineWidgets")
+        search_text = "5.15.6 ${_Qt5WebEngineWidgets_FIND_VERSION_EXACT}"
+        replace_text = "5.15.2 ${_Qt5WebEngineWidgets_FIND_VERSION_EXACT}"
+        with open(f"{self.fullPath}/lib/cmake/Qt5WebEngineWidgets/Qt5WebEngineWidgetsConfig.cmake", "r") as file:
+            data = file.read()
+            data = data.replace(search_text, replace_text)
+        with open(f"{self.fullPath}/lib/cmake/Qt5WebEngineWidgets/Qt5WebEngineWidgetsConfig.cmake", 'w') as file:
+            file.write(data)
+        print("Patched QtWebEngineWidgets")
