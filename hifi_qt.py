@@ -208,7 +208,7 @@ endif()
             print ('Downloading Qt from AWS')
             print('Extracting ' + self.qtUrl + ' to ' + self.path)
             hifi_utils.downloadAndExtract(self.qtUrl, self.path)
-            if 'Darwin' == system:
+            if 'Darwin' == platform.system():
                 print('Allowing use of QtWebEngine >5.15.2')
                 self.__allow_newer_qtwebengine()
         else:
