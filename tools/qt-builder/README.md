@@ -326,7 +326,7 @@ make -j1 install
 
 #### Fixing
 1.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
-`cd` to the `qt5-install directory`
+`cd` to the `qt5-install` directory
 `find . -name \*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;`
 `cd ..`
 1.   Note: you may have additional files in qt5-install/lib and qt5-install/lib/pkg/pkgconfig that have your local build absolute path included.  Optionally you can fix these as well, but it will not effect the build if left alone.
@@ -336,8 +336,10 @@ Add a *qt.conf* file.
 1. Edit the *qt.conf* file: replace all absolute URLs with relative URLs (beginning with .. or .)
 
 #### Uploading
-`tar -zcvf qt5-install-5.15.2-macos.tar.gz qt5-install`
-Upload qt5-install-5.15.2-macos.tar.gz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
+```bash
+tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.6-macos.tar.xz qt5-install`
+```
+Upload qt5-install-5.15.2-qtwebengine-5.15.6-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
 
 #### Creating symbols (optional)
 Run `python3 prepare-mac-symbols-for-backtrace.py qt5-install` to scan the qt5-build directory for any dylibs and execute dsymutil to create dSYM bundles.  After running this command the backtrace directory will be created.  Zip this directory up, but make sure that all dylibs and dSYM fiels are in the root of the zip file, not under a sub-directory.  This file can then be uploaded to backtrace or other crash log handling tool.
