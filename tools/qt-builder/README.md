@@ -92,8 +92,12 @@ Install from https://git-scm.com/download/mac
 Verify again
 1.  install pkg-config, dbug-glib, and fontconfig
 brew install fontconfig dbus-glib pkg-config
-
-
+1. install Xcode 11.x 
+https://xcodereleases.com
+We use Xcode 11.x as using a newer version might cause problems with building Qt on older macOSXSDKs.
+1. get macOSXSDK10.13 installed in Xcode 11
+Either extract it out of a fitting Xcode archive (Xcode 9.4.1), or download it from a non-Apple source.
+We use macOSXSDK10.13 as we are building Vircadia with macOSXSDK10.12 to work around OpenGL support issues and having larger macOSXSDK version differences in the same app cause severe problems like Qt not being able to render anything.
 ## Build Process
 
 
@@ -300,7 +304,6 @@ git submodule update
 Note: If you run into any issues with Qt on macOS, take a look at what our friends at macports are doing. 
 - https://github.com/macports/macports-ports/tree/master/aqua/qt5/files
 - https://trac.macports.org/query?status=accepted&status=assigned&status=closed&status=new&status=reopened&port=~qt5&desc=1&order=id
-
 
 ```bash
 cd ../.. 
