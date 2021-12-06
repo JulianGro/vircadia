@@ -318,6 +318,8 @@ cd qt5-build
 ```
 
 #### Make
+Building with newer QtWebEngine will fail by standard. To fix this change the relevant cmake files in `qt5-build` according to https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions
+
 Important: Building Qt using multiple threads needs a lot of system memory in later stages of the process. You should have around 1.5GiB available per thread you intend to use.
 ```bash
 NINJAFLAGS='-j4'  make -j4
