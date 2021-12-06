@@ -318,8 +318,6 @@ cd qt5-build
 ```
 
 #### Make
-Building with newer QtWebEngine will fail by standard. To fix this change the relevant cmake files in `qt5-build` according to https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions
-
 Important: Building Qt using multiple threads needs a lot of system memory in later stages of the process. You should have around 1.5GiB available per thread you intend to use.
 ```bash
 NINJAFLAGS='-j4'  make -j4
@@ -331,6 +329,7 @@ make -j1 install
 ```
 
 #### Fixing
+1.  Building with newer QtWebEngine will fail by standard. To fix this change the relevant cmake files in `qt5-install` according to https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions
 1.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
 `cd` to the `qt5-install` directory
 `find . -name \*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;`
