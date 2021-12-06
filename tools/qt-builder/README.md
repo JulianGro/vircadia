@@ -86,18 +86,19 @@ Make sure that python 2.7.x is the system standard by checking if `python --vers
 Qt also provides a dependency list for some major Linux distributions here: https://wiki.qt.io/Building_Qt_5_from_Git#Linux.2FX11
 
 ### Mac
+1. macOS Catalina or macOS Mojave
+Newer and older macOS versions won't be able to run the Xcode version we need.
 1.  git >= 1.6
 Check if needed `git --version`
 Install from https://git-scm.com/download/mac
 Verify again
 1.  install pkg-config, dbug-glib, and fontconfig
 brew install fontconfig dbus-glib pkg-config
-1. install Xcode 11.x 
+1. install Xcode 10.x 
 https://xcodereleases.com
-We use Xcode 11.x as using a newer version might cause problems with building Qt on older macOSXSDKs.
-1. get macOSXSDK10.13 installed in Xcode 11
-Either extract it out of a fitting Xcode archive (Xcode 9.4.1), or download it from a non-Apple source.
-We use macOSXSDK10.13 as we are building Vircadia with macOSXSDK10.12 to work around OpenGL support issues and having larger macOSXSDK version differences in the same app cause severe problems like Qt not being able to render anything.
+We use Xcode 10.x as it comes with macOSXSDK10.14, which is the newest version usable with Interface which is built with macOSXSDK10.12 for work around severe OpenGL issues in newer SDKs.
+
+
 ## Build Process
 
 
