@@ -97,7 +97,9 @@ brew install fontconfig dbus-glib pkg-config
 1. install Xcode 10.x 
 https://xcodereleases.com
 We use Xcode 10.x as it comes with macOSXSDK10.14, which is the newest version usable with Interface which is built with macOSXSDK10.12 for work around severe OpenGL issues in newer SDKs.
-
+1. if you had installed a different Xcode version in the past, you may need to reinstall a compatible Xcode command line tools version.
+`sudo rm -rf /Library/Developer/CommandLineTools`
+`xcode-select --install`
 
 ## Build Process
 
