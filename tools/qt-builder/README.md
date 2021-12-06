@@ -289,13 +289,13 @@ tar -Jcvf qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz qt5-install
 git clone --recursive git://code.qt.io/qt/qt5.git -b 5.15.2 --single-branch
 ```
 
-Plain Qt 5.15.2 cannot actually be built on it's only supported configuration. To fix this, we will use QtWebEngine from Qt 5.15.6.
+Plain Qt 5.15.2 cannot actually be built on it's only supported configuration. To fix this, we will use QtWebEngine from Qt 5.15.7.
 ```bash
 cd qt5/qtwebengine
-git pull git://code.qt.io/qt/qtwebengine.git 5.15.6
+git pull git://code.qt.io/qt/qtwebengine.git 5.15.7
 ```
 This doesn't seem to update the submodule, so we do that here.
-By standard this gets the newest version of qtwebengine-chromium. At time of writing this is `9f71911e38c041cedc5291c5e772b7d03ce8b8c8`.
+By standard this gets the newest version of qtwebengine-chromium. At time of writing this is `8c0a9b4459f5200a24ab9e687a3fb32e975382e5`.
 ```bash
 git submodule update
 ```
