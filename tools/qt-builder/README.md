@@ -335,11 +335,11 @@ make -j1 install
 ```bash
 foreach webengine_module [list Pdf PdfWidgets WebEngine WebEngineCore WebEngineWidgets] {reinplace "s|${version} |${qt_version} |g" ${worksrcpath}/lib/cmake/Qt5${webengine_module}/Qt5${webengine_module}Config.cmake }
 ```
-1.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
+2.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
 `cd` to the `qt5-install` directory
 `find . -name \*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;`
 `cd ..`
-1.   Note: you may have additional files in qt5-install/lib and qt5-install/lib/pkg/pkgconfig that have your local build absolute path included.  Optionally you can fix these as well, but it will not effect the build if left alone.
+3.   Note: you may have additional files in qt5-install/lib and qt5-install/lib/pkg/pkgconfig that have your local build absolute path included.  Optionally you can fix these as well, but it will not effect the build if left alone.
 
 Add a *qt.conf* file.
 1. Copy the file *qt5-build\qtbase\bin\qt.conf* to *qt5-install\bin*
