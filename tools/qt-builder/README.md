@@ -97,9 +97,7 @@ brew install fontconfig dbus-glib pkg-config
 1. install Xcode 10.x 
 https://xcodereleases.com
 We use Xcode 10.x as it comes with macOSXSDK10.14, which is the newest version usable with Interface which is built with macOSXSDK10.12 for work around severe OpenGL issues in newer SDKs.
-1. if you had installed a different Xcode version in the past, you may need to reinstall a compatible Xcode command line tools version.
-`sudo rm -rf /Library/Developer/CommandLineTools`
-`xcode-select --install`
+
 
 ## Build Process
 
@@ -352,4 +350,9 @@ Upload qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz to our Amazon S3 virca
 Run `python3 prepare-mac-symbols-for-backtrace.py qt5-install` to scan the qt5-build directory for any dylibs and execute dsymutil to create dSYM bundles.  After running this command the backtrace directory will be created.  Zip this directory up, but make sure that all dylibs and dSYM fiels are in the root of the zip file, not under a sub-directory.  This file can then be uploaded to backtrace or other crash log handling tool.
 
 ## Problems
+macOS may install an incompatible Xcode command line tools version. If you run into weird issues, you may need to delete your current command line tools and replace it with an older version. This specifically happens on macOS Catalina.
+1. `sudo rm -rf /Library/Developer/CommandLineTools`
+1. Download Command Line Tools for Xcode 11.5 from https://developer.apple.com/download/more/
+1. Install said Command Line Tools
+
 *configure* errors, if any, may be viewed in **config.log** and **config.summary**
