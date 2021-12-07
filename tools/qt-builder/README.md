@@ -97,7 +97,9 @@ brew install fontconfig dbus-glib pkg-config
 1. install Xcode 10.x 
 https://xcodereleases.com
 We use Xcode 10.x as it comes with macOSXSDK10.14, which is the newest version usable with Interface which is built with macOSXSDK10.12 for work around severe OpenGL issues in newer SDKs.
-
+1. macOS may install an incompatible Xcode command line tools version. If you run into weird issues, you may need to delete your current command line tools and replace it with an older version. This happens on macOS Catalina.
+ `sudo rm -rf /Library/Developer/CommandLineTools`
+ Download Command Line Tools for Xcode 11.5 from https://developer.apple.com/download/more/ and install said Command Line Tools.
 
 ## Build Process
 
@@ -330,6 +332,7 @@ make -j1 install
 
 #### Fixing
 1.  Building with newer QtWebEngine will fail by standard. To fix this change the relevant cmake files in `qt5-install` according to https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions
+See an example in macports file https://github.com/macports/macports-ports/pull/12595/files#diff-bc9f30dc8c9f361f400189b91801321d634f45c504735b63dd156a06e245449fR1765
 1.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
 `cd` to the `qt5-install` directory
 `find . -name \*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;`
@@ -350,9 +353,4 @@ Upload qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz to our Amazon S3 virca
 Run `python3 prepare-mac-symbols-for-backtrace.py qt5-install` to scan the qt5-build directory for any dylibs and execute dsymutil to create dSYM bundles.  After running this command the backtrace directory will be created.  Zip this directory up, but make sure that all dylibs and dSYM fiels are in the root of the zip file, not under a sub-directory.  This file can then be uploaded to backtrace or other crash log handling tool.
 
 ## Problems
-macOS may install an incompatible Xcode command line tools version. If you run into weird issues, you may need to delete your current command line tools and replace it with an older version. This specifically happens on macOS Catalina.
-1. `sudo rm -rf /Library/Developer/CommandLineTools`
-1. Download Command Line Tools for Xcode 11.5 from https://developer.apple.com/download/more/
-1. Install said Command Line Tools
-
 *configure* errors, if any, may be viewed in **config.log** and **config.summary**
