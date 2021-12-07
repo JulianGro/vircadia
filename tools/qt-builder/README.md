@@ -331,9 +331,9 @@ make -j1 install
 ```
 
 #### Fixing
-1.  Building with newer QtWebEngine will fail by standard. To fix this change the relevant cmake files in `qt5-install` according to https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions
+1.  Building with newer QtWebEngine will fail by standard. To fix this we need to change the relevant cmake files in `qt5-install`. (See https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions and https://github.com/macports/macports-ports/pull/12595/files )
 ```bash
-foreach webengine_module [list Pdf PdfWidgets WebEngine WebEngineCore WebEngineWidgets] {reinplace "s|${version} |${qt_version} |g" ${worksrcpath}/lib/cmake/Qt5${webengine_module}/Qt5${webengine_module}Config.cmake }
+foreach webengine_module [list Pdf PdfWidgets WebEngine WebEngineCore WebEngineWidgets] {reinplace "s|5.15.7 |5.15.2 |g" ${worksrcpath}/lib/cmake/Qt5${webengine_module}/Qt5${webengine_module}Config.cmake }
 ```
 2.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
 `cd` to the `qt5-install` directory
