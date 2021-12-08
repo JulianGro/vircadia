@@ -337,7 +337,7 @@ foreach webengine_module [list Pdf PdfWidgets WebEngine WebEngineCore WebEngineW
 ```
 
 `cd` to the `qt5-install` directory
-`find . -name \Qt5WebEngineConfig.cmake -exec sed -i 's/5\.15\.7/5.15.2/g' {} \;`
+`find . -name \Qt5WebEngine*Config.cmake -exec sed -i 's/5\.15\.7/5\.15\.2/g' {} \;`
 `cd ..`
 
 2.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
