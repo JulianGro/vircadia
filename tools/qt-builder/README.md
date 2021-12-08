@@ -350,7 +350,7 @@ Add a *qt.conf* file.
 
 #### Uploading
 ```bash
-tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz qt5-install`
+tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz qt5-install
 ```
 Upload qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
 
