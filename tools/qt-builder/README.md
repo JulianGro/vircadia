@@ -332,12 +332,11 @@ make -j1 install
 
 #### Fixing
 1.  Building with newer QtWebEngine will fail by standard. To fix this we need to change the relevant cmake files in `qt5-install`. (See https://www.qt.io/blog/building-qt-webengine-against-other-qt-versions and https://github.com/macports/macports-ports/pull/12595/files )
-
-`cd` to the `qt5-install` directory.
-Enter `bash` since zsh cannot run the following command.
-`find . -name \Qt5WebEngine*Config.cmake -exec sed -i '' -e 's/5\.15\.7/5\.15\.2/g' {} \;`
-`exit` bash to got back to zsh.
-`cd ..`
+- `cd` to the `qt5-install` directory.
+- Enter `bash` since zsh cannot run the following command.
+- `find . -name \Qt5WebEngine*Config.cmake -exec sed -i '' -e 's/5\.15\.7/5\.15\.2/g' {} \;`
+- `exit` bash to got back to zsh.
+- `cd ..`
 
 2.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
 `cd` to the `qt5-install` directory
