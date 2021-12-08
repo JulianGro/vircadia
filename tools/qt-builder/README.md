@@ -335,6 +335,11 @@ make -j1 install
 ```bash
 foreach webengine_module [list Pdf PdfWidgets WebEngine WebEngineCore WebEngineWidgets] {reinplace "s|5.15.7 |5.15.2 |g" ${worksrcpath}/lib/cmake/Qt5${webengine_module}/Qt5${webengine_module}Config.cmake }
 ```
+
+`cd` to the `qt5-install` directory
+`find . -name \Qt5WebEngineConfig.cmake -exec sed -i 's/5\.15\.7/5.15.2/g' {} \;`
+`cd ..`
+
 2.  The *.prl* files have an absolute path that needs to be removed (see http://www.linuxfromscratch.org/blfs/view/stable-systemd/x/qtwebengine.html)
 `cd` to the `qt5-install` directory
 `find . -name \*.prl -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;`
