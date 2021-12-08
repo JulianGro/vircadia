@@ -350,9 +350,9 @@ Add a *qt.conf* file.
 
 #### Uploading
 ```bash
-tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz qt5-install
+tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.14-macos.tar.xz qt5-install
 ```
-Upload qt5-install-5.15.2-qtwebengine-5.15.7-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
+Upload qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.14-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
 
 #### Creating symbols (optional)
 Run `python3 prepare-mac-symbols-for-backtrace.py qt5-install` to scan the qt5-build directory for any dylibs and execute dsymutil to create dSYM bundles.  After running this command the backtrace directory will be created.  Zip this directory up, but make sure that all dylibs and dSYM fiels are in the root of the zip file, not under a sub-directory.  This file can then be uploaded to backtrace or other crash log handling tool.
