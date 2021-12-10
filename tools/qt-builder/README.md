@@ -86,7 +86,7 @@ Make sure that python 2.7.x is the system standard by checking if `python --vers
 Qt also provides a dependency list for some major Linux distributions here: https://wiki.qt.io/Building_Qt_5_from_Git#Linux.2FX11
 
 ### Mac
-1. *macOS Catalina or macOS Mojave*
+1. *macOS Mojave*
 Newer and older macOS versions won't be able to run the Xcode version we need.
 1.  *git >= 1.6*
 Check if needed `git --version`.
