@@ -94,9 +94,9 @@ Install from https://git-scm.com/download/mac
 Verify again
 1.  install pkg-config, dbug-glib, and fontconfig
 brew install fontconfig dbus-glib pkg-config
-1. install Xcode 10.x 
+1. install Xcode 9.4.1
 https://xcodereleases.com
-We use Xcode 10.x as it comes with macOSXSDK10.14, which is the newest version usable with Interface which is built with macOSXSDK10.12 for work around severe OpenGL issues in newer SDKs.
+We use Xcode 9.4.1 as it comes with macOSXSDK10.13, which is the newest version usable with Interface which is built with macOSXSDK10.12 for work around severe OpenGL issues in newer SDKs.
 1. macOS may install an incompatible Xcode command line tools version. If you run into weird issues, you may need to delete your current command line tools and replace it with an older version. This happens on macOS Catalina.
  `sudo rm -rf /Library/Developer/CommandLineTools`
  Download Command Line Tools for Xcode 11.5 from https://developer.apple.com/download/more/ and install said Command Line Tools.
@@ -350,9 +350,9 @@ Add a *qt.conf* file.
 
 #### Uploading
 ```bash
-tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.14-macos.tar.xz qt5-install
+tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.13-macos.tar.xz qt5-install
 ```
-Upload qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.14-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
+Upload qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.13-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
 
 #### Creating symbols (optional)
 Run `python3 prepare-mac-symbols-for-backtrace.py qt5-install` to scan the qt5-build directory for any dylibs and execute dsymutil to create dSYM bundles.  After running this command the backtrace directory will be created.  Zip this directory up, but make sure that all dylibs and dSYM fiels are in the root of the zip file, not under a sub-directory.  This file can then be uploaded to backtrace or other crash log handling tool.
