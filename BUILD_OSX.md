@@ -1,6 +1,6 @@
 # Build MacOS
 
-*Last Updated on October 19, 2021*
+*Last Updated on December 19, 2021*
 
 Please read the [general build guide](BUILD.md) for information on dependencies required for all platforms. This will include the necessary environment variables to customize your build. Only macOS specific instructions are found in this document.
 
@@ -34,6 +34,11 @@ cp -rp ~/Downloads/MacOSX10.12.sdk /Applications/Xcode.app/Contents/Developer/Pl
 Assuming you've installed OpenSSL using the homebrew instructions above, you'll need to set `OPENSSL_ROOT_DIR` so CMake can find your installations.
 For OpenSSL installed via homebrew, set `OPENSSL_ROOT_DIR` via `export OPENSSL_ROOT_DIR=/usr/local/opt/openssl` or by appending `-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl` to `cmake`.
 
+### Xcode
+
+To build Vircadia using the macOS SDK 10.12, you will need an Xcode version between 10.3 and 12.1. Higher versions will throw a warning that SDKs versions lower than 11 cannot be used.
+You can get Xcode from https://xcodereleases.com.
+
 ## Generate and Build
 
 You can choose to use either Unix Makefiles or Xcode.
@@ -63,6 +68,22 @@ cmake -DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/
 You can append `-j4` to assign more threads to build with. The number indicates the number of threads, e.g. 4.
 
 To package the installation, you can simply run `make package` afterwards.
+
+### Legacy build
+
+There is an alternative way of building that is currently used by GitHub Actions.
+
+Generate Xcode files like shown in step Xcode above.
+Then you can build Vircadia using a command like:
+```bash
+cmake --build . --target Vircadia --config Release
+```
+Keep in mind that target `Vircadia` on macOS equals target `Interface` on other systems.
+
+You can then package the installation:
+```bash
+cmake --build . --target package --config Release
+```
 
 ## Notes
 
