@@ -36,8 +36,8 @@ For OpenSSL installed via homebrew, set `OPENSSL_ROOT_DIR` via `export OPENSSL_R
 
 ### Xcode
 
-To build Vircadia using the macOS SDK 10.12, you will need an Xcode version between 10.3 and 12.1. Higher versions will throw a warning that SDKs versions lower than 11 cannot be used.
-You can get Xcode from https://xcodereleases.com.
+Most Xcode versions starting at 10.3 should work.
+You can get Xcode from https://xcodereleases.com or directly from the Mac App Store.
 
 ## Generate and Build
 
