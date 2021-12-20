@@ -1,12 +1,12 @@
 # General
-This document describes the process to build Qt 5.15.2. (and 5.14.2 on macOS)
+This document describes the process to build Qt 5.15.2. (and 5.13.2 on macOS)
 
 Reference: https://doc.qt.io/qt-5/build-sources.html
 
 Note that there are patches.
 * *win-qtwebengine.diff* fixes building with Visual Studio 2019 16.8.0.  See https://bugreports.qt.io/browse/QTBUG-88625.
 * *qtscript-crash-fix.patch* fixes QScriptEngine on *Qt versions lower than* 5.15. to prevent crashes in QScriptEnginePrivate::reportAdditionalMemoryCost, during garbage collection. See https://bugreports.qt.io/browse/QTBUG-76176
-
+* *mac-web-video.patch* fixes video playback on WebEngineViews on mac on *Qt versions lower than* 5.15. See https://bugreports.qt.io/browse/QTBUG-70967
 
 ## Requirements
 
@@ -87,14 +87,14 @@ Qt also provides a dependency list for some major Linux distributions here: http
 
 ### Mac
 1. macOS Catalina
- For both Qt5.15.2 and Qt5.14.2 Catalina seems the easiest option. Qt5.15.2 can also be build on Big Sur if you upgrade the QtWebEngine.
+ For both Qt5.15.2 and Qt5.13.2 Catalina seems the easiest option. Qt5.15.2 can also be build on Big Sur if you upgrade the QtWebEngine.
 1.  git >= 1.6
  Check if needed `git --version`
  Install from https://git-scm.com/download/mac
  Verify again
 1.  install pkg-config, dbug-glib, and fontconfig
  `brew install fontconfig dbus-glib pkg-config`
-1. for Qt 5.14.2 install Xcode 10.3 with its 10.14.6 SDK. Newer versions up to Xcode 11.x with SDK 10.15.x should work as well.
+1. for Qt 5.13.2 install Xcode 10.3 with its 10.14.6 SDK.
  https://xcodereleases.com
  Qt 5.15.2 can be built with the same version, but also up to Xcode 12.5.1.
 1. macOS may install an incompatible Xcode command line tools version. If you run into weird issues, you may need to delete your current command line tools and replace it with an older version.
@@ -298,22 +298,25 @@ Plain Qt 5.15.2 cannot actually be built on most supported configurations. To fi
 ```bash
 cd qt5/qtwebengine
 git pull git://code.qt.io/qt/qtwebengine.git 5.15.7
+```
+This doesn't seem to update the submodule, so we do that here.
+By standard this gets the newest version of qtwebengine-chromium. At time of writing this is `8c0a9b4459f5200a24ab9e687a3fb32e975382e5`.
+```bash
 git submodule update
 cd ../..
 ```
 
-##### Qt 5.14.2
+##### Qt 5.13.2
 ```bash
-git clone --recursive git://code.qt.io/qt/qt5.git -b 5.14.2 --single-branch
+git clone --recursive git://code.qt.io/qt/qt5.git -b 5.13.2 --single-branch
 ```
 
 *  Copy the **patches** folder to qt5
-*   Apply the patches to Qt
-This doesn't seem to update the submodule, so we do that here.
-By standard this gets the newest version of qtwebengine-chromium. At time of writing this is `8c0a9b4459f5200a24ab9e687a3fb32e975382e5`.
+*  Apply the patches to Qt
 ```bash
 cd qt5
 git apply --ignore-space-change --ignore-whitespace patches/qtscript-crash-fix.patch
+git apply --ignore-space-change --ignore-whitespace patches/mac-web-video.patch
 cd ..
 ```
 
@@ -368,11 +371,11 @@ tar -Jcvf qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.14-macos.tar.xz qt5-
 ```
 Upload qt5-install-5.15.2-qtwebengine-5.15.7-macOSXSDK10.14-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
 
-##### Qt 5.14.2
+##### Qt 5.13.2
 ```bash
-tar -Jcvf qt5-install-5.14.2-macOSXSDK10.14-macos.tar.xz qt5-install
+tar -Jcvf qt5-install-5.13.2-macOSXSDK10.14-macos.tar.xz qt5-install
 ```
-Upload qt5-install-5.14.2-macOSXSDK10.14-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
+Upload qt5-install-5.13.2-macOSXSDK10.14-macos.tar.xz to our Amazon S3 vircadia-public bucket, under the dependencies/vckpg directory
 
 #### Creating symbols (optional)
 Run `python3 prepare-mac-symbols-for-backtrace.py qt5-install` to scan the qt5-build directory for any dylibs and execute dsymutil to create dSYM bundles.  After running this command the backtrace directory will be created.  Zip this directory up, but make sure that all dylibs and dSYM fiels are in the root of the zip file, not under a sub-directory.  This file can then be uploaded to backtrace or other crash log handling tool.
