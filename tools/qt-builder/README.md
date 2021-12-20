@@ -6,7 +6,6 @@ Reference: https://doc.qt.io/qt-5/build-sources.html
 Note that there are patches.
 * *win-qtwebengine.diff* fixes building with Visual Studio 2019 16.8.0.  See https://bugreports.qt.io/browse/QTBUG-88625.
 * *qtscript-crash-fix.patch* fixes QScriptEngine on *Qt versions lower than* 5.15. to prevent crashes in QScriptEnginePrivate::reportAdditionalMemoryCost, during garbage collection. See https://bugreports.qt.io/browse/QTBUG-76176
-* *mac-web-video.patch* fixes video playback on WebEngineViews on mac on *Qt versions lower than* 5.15. See https://bugreports.qt.io/browse/QTBUG-70967
 
 ## Requirements
 
@@ -316,7 +315,6 @@ git clone --recursive git://code.qt.io/qt/qt5.git -b 5.13.2 --single-branch
 ```bash
 cd qt5
 git apply --ignore-space-change --ignore-whitespace patches/qtscript-crash-fix.patch
-git apply --ignore-space-change --ignore-whitespace patches/mac-web-video.patch
 cd ..
 ```
 
