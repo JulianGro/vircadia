@@ -26,7 +26,7 @@ private:
     MyHead(const Head&);
     MyHead& operator= (const MyHead&);
 #else
-    Q_DISABLE_COPY(MyHead)ream)
+    Q_DISABLE_COPY(MyHead)
 #endif
 };
 
