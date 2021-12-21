@@ -444,7 +444,11 @@ protected:
     QVector<float> _blendedBlendshapeCoefficients;
     int _blendNumber { 0 };
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    mutable QMutex _mutex{ QMutex::Recursive };
+#else
     mutable QRecursiveMutex _mutex;
+#endif
 
     bool _overrideModelTransform { false };
     bool _triangleSetsValid { false };
@@ -497,7 +501,7 @@ protected:
     //  - CastShadow: if true and visible and rendered in the view, the Model cast shadows if in a Light volume casting shadows.
     //  - CullGroup: if true, the render items representing the parts of the Model are culled by a single Meta render item that knows about them, they are not culled individually.
     //               For this to work, a Meta RI must exists and knows about the RIs of this Model.
-    //  
+    //
     render::ItemKey _renderItemKeyGlobalFlags;
     bool _cauterized { false };
     bool _cullWithParent { false };

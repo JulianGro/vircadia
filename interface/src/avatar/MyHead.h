@@ -22,7 +22,12 @@ public:
     void simulate(float deltaTime) override;
 
 private:
-    Q_DISABLE_COPY(MyHead)
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    MyHead(const Head&);
+    MyHead& operator= (const MyHead&);
+#else
+    Q_DISABLE_COPY(MyHead)ream)
+#endif
 };
 
 #endif // hifi_MyHead_h

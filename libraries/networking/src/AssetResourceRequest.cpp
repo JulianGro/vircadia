@@ -39,7 +39,7 @@ AssetResourceRequest::~AssetResourceRequest() {
         if (_assetMappingRequest) {
             _assetMappingRequest->deleteLater();
         }
-        
+
         if (_assetRequest) {
             _assetRequest->deleteLater();
         }
@@ -59,7 +59,11 @@ void AssetResourceRequest::doSend() {
     // We'll either have a hash or an ATP path to a file (that maps to a hash)
     if (urlIsAssetHash(_url)) {
         // We've detected that this is a hash - simply use AssetClient to request that asset
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+        auto parts = _url.path().split(".", QString::SkipEmptyParts);
+#else
         auto parts = _url.path().split(".", Qt::SkipEmptyParts);
+#endif
         auto hash = parts.length() > 0 ? parts[0] : "";
 
         requestHash(hash);
@@ -82,7 +86,7 @@ void AssetResourceRequest::requestMappingForPath(const AssetUtils::AssetPath& pa
     // make sure we'll hear about the result of the get mapping request
     connect(_assetMappingRequest, &GetMappingRequest::finished, this, [this, path](GetMappingRequest* request){
         auto statTracker = DependencyManager::get<StatTracker>();
-        
+
         Q_ASSERT(_state == InProgress);
         Q_ASSERT(request == _assetMappingRequest);
 

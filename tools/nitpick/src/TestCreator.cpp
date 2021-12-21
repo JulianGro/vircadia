@@ -86,7 +86,7 @@ int TestCreator::compareImageLists(const QString& gpuVendor) {
         double worstTileValue;   // in [-1.0 .. 1.0], where 1.0 means images are identical
 
         bool isInteractiveMode = (!_isRunningFromCommandLine && _checkBoxInteractiveMode->isChecked() && !_isRunningInAutomaticTestRun);
-                                 
+
         // similarityIndex is set to -100.0 to indicate images are not the same size
         if (isInteractiveMode && (resultImage.width() != expectedImage.width() || resultImage.height() != expectedImage.height())) {
             QMessageBox::critical(0, "Internal error: " + QString(__FILE__) + ":" + QString::number(__LINE__), "Images are not the same size");
@@ -192,7 +192,7 @@ void TestCreator::appendTestResultsToFile(const TestResult& testResult, const QP
 
         ++_successIndex;
     }
-    
+
     if (!QDir().mkdir(resultFolderPath)) {
         QMessageBox::critical(0, "Internal error: " + QString(__FILE__) + ":" + QString::number(__LINE__),
                               "Failed to create folder " + resultFolderPath);
@@ -207,11 +207,20 @@ void TestCreator::appendTestResultsToFile(const TestResult& testResult, const QP
 
     // Create text file describing the failure
     QTextStream stream(&descriptionFile);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    stream << "TestCreator in folder " << testResult._pathname.left(testResult._pathname.length() - 1) << endl; // remove trailing '/'
+    stream << "Expected image was    " << testResult._expectedImageFilename << endl;
+    stream << "Actual image was      " << testResult._actualImageFilename << endl;
+    stream << "Similarity index was  " << testResult._errorGlobal << endl;
+    stream << "Worst tile was  " << testResult._errorLocal << endl;
+#else
     stream << "TestCreator in folder " << testResult._pathname.left(testResult._pathname.length() - 1) << Qt::endl; // remove trailing '/'
     stream << "Expected image was    " << testResult._expectedImageFilename << Qt::endl;
     stream << "Actual image was      " << testResult._actualImageFilename << Qt::endl;
     stream << "Similarity index was  " << testResult._errorGlobal << Qt::endl;
     stream << "Worst tile was  " << testResult._errorLocal << Qt::endl;
+#endif
+
 
     descriptionFile.close();
 
@@ -267,9 +276,9 @@ void::TestCreator::appendTestResultsToFile(QString testResultFilename, bool hasF
 }
 
 void TestCreator::startTestsEvaluation(
-    QComboBox *gpuVendor, 
+    QComboBox *gpuVendor,
     const bool isRunningFromCommandLine,
-    const bool isRunningInAutomaticTestRun, 
+    const bool isRunningInAutomaticTestRun,
     const QString& snapshotDirectory,
     const QString& branchFromCommandLine,
     const QString& userFromCommandLine
@@ -350,7 +359,7 @@ void TestCreator::startTestsEvaluation(
 void TestCreator::finishTestsEvaluation(const QString& gpuVendor) {
     // First - compare the pairs of images
     int numberOfFailures = compareImageLists(gpuVendor);
- 
+
     // Next - check text results
     numberOfFailures += checkTextResults();
 
@@ -415,7 +424,11 @@ void TestCreator::includeTest(QTextStream& textStream, const QString& testPathna
     QString partialPath = extractPathFromTestsDown(testPathname);
     QString partialPathWithoutTests = partialPath.right(partialPath.length() - 7);
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    textStream << "Script.include(testsRootPath + \"" << partialPathWithoutTests + "\");" << endl;
+#else
     textStream << "Script.include(testsRootPath + \"" << partialPathWithoutTests + "\");" << Qt::endl;
+#endif
 }
 
 void TestCreator::createTests(const QString& clientProfile) {
@@ -454,7 +467,7 @@ void TestCreator::createTests(const QString& clientProfile) {
 
     QStringList sortedImageFilenames = createListOfAll_imagesInDirectory("png", _snapshotDirectory);
 
-    int i = 1; 
+    int i = 1;
     const int maxImages = pow(10, NUM_DIGITS);
     foreach (QString currentFilename, sortedImageFilenames) {
         QString fullCurrentFilename = _snapshotDirectory + "/" + currentFilename;
@@ -484,7 +497,7 @@ void TestCreator::createTests(const QString& clientProfile) {
             try {
                 if (QFile::exists(fullNewFileName)) {
                     QFile::remove(fullNewFileName);
-                }               
+                }
                 QFile::copy(fullCurrentFilename, fullNewFileName);
             } catch (...) {
                 QMessageBox::critical(0, "Error", "Could not copy file: " + fullCurrentFilename + " to " + fullNewFileName + "\n");
@@ -694,8 +707,8 @@ bool TestCreator::createAllFilesSetup() {
 void TestCreator::createMDFile() {
     if (!createFileSetup()) {
         return;
-    } 
-    
+    }
+
     if (createMDFile(_testDirectory)) {
         QMessageBox::information(0, "Success", "MD file has been created");
     }
@@ -839,8 +852,8 @@ bool TestCreator::createMDFile(const QString& directory) {
 void TestCreator::createTestAutoScript() {
     if (!createFileSetup()) {
         return;
-    } 
-    
+    }
+
     if (createTestAutoScript(_testDirectory)) {
         QMessageBox::information(0, "Success", "'testAuto.js` script has been created");
     }
@@ -994,12 +1007,45 @@ void TestCreator::createRecursiveScript(const QString& directory, bool interacti
 
     QTextStream textStream(&recursiveTestsFile);
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    textStream << "// This is an automatically generated file, created by nitpick" << endl;
+#else
     textStream << "// This is an automatically generated file, created by nitpick" << Qt::endl;
+#endif
 
     // Include 'nitpick.js'
     QString branch = nitpick->getSelectedBranch();
     QString user = nitpick->getSelectedUser();
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    textStream << "PATH_TO_THE_REPO_PATH_UTILS_FILE = \"https://raw.githubusercontent.com/" + user + "/hifi_tests/" + branch +
+        "/tests/utils/branchUtils.js\";"
+        << endl;
+    textStream << "Script.include(PATH_TO_THE_REPO_PATH_UTILS_FILE);" << endl << endl;
+
+    // The 'depth' variable is used to signal when to start running the recursive scripts
+    textStream << "if (typeof depth === 'undefined') {" << endl;
+    textStream << "   depth = 0;" << endl;
+    textStream << "   nitpick = createNitpick(Script.resolvePath(\".\"));" << endl;
+    textStream << "   testsRootPath = nitpick.getTestsRootPath();" << endl << endl;
+    textStream << "   nitpick.enableRecursive();" << endl;
+    textStream << "   nitpick.enableAuto();" << endl;
+    textStream << "} else {" << endl;
+    textStream << "   depth++" << endl;
+    textStream << "}" << endl << endl;
+
+    // Now include the test scripts
+    for (int i = 0; i < directories.length(); ++i) {
+        includeTest(textStream, directories.at(i));
+    }
+
+    textStream << endl;
+    textStream << "if (depth > 0) {" << endl;
+    textStream << "   depth--;" << endl;
+    textStream << "} else {" << endl;
+    textStream << "   nitpick.runRecursive();" << endl;
+    textStream << "}" << endl << endl;
+#else
     textStream << "PATH_TO_THE_REPO_PATH_UTILS_FILE = \"https://raw.githubusercontent.com/" + user + "/hifi_tests/" + branch +
         "/tests/utils/branchUtils.js\";"
         << Qt::endl;
@@ -1027,6 +1073,8 @@ void TestCreator::createRecursiveScript(const QString& directory, bool interacti
     textStream << "} else {" << Qt::endl;
     textStream << "   nitpick.runRecursive();" << Qt::endl;
     textStream << "}" << Qt::endl << Qt::endl;
+#endif
+
 
     recursiveTestsFile.close();
 }
@@ -1162,7 +1210,7 @@ void TestCreator::createTestRailRun() {
 
 void TestCreator::updateTestRailRunResult() {
     QString testResults = QFileDialog::getOpenFileName(nullptr, "Please select the zipped test results to update from", nullptr,
-                                                       "Zipped TestCreator Results (*.zip)");   
+                                                       "Zipped TestCreator Results (*.zip)");
     if (testResults.isNull()) {
         return;
     }
@@ -1255,7 +1303,7 @@ void TestCreator::setTestRailCreateMode(TestRailCreateMode testRailCreateMode) {
 }
 
 void TestCreator::createWebPage(
-    QCheckBox* updateAWSCheckBox, 
+    QCheckBox* updateAWSCheckBox,
     QRadioButton* diffImageRadioButton,
     QRadioButton* ssimImageRadionButton,
     QLineEdit* urlLineEdit,
@@ -1280,9 +1328,9 @@ void TestCreator::createWebPage(
     }
 
     _awsInterface->createWebPageFromResults(
-        testResults, 
-        workingDirectory, 
-        updateAWSCheckBox, 
+        testResults,
+        workingDirectory,
+        updateAWSCheckBox,
         diffImageRadioButton,
         ssimImageRadionButton,
         urlLineEdit,

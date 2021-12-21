@@ -67,8 +67,12 @@ EntityTree::~EntityTree() {
     //eraseAllOctreeElements(false); // KEEP THIS
 }
 
-void EntityTree::setEntityScriptSourceWhitelist(const QString& entityScriptSourceWhitelist) { 
+void EntityTree::setEntityScriptSourceWhitelist(const QString& entityScriptSourceWhitelist) {
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', QString::SkipEmptyParts);
+#else
     _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', Qt::SkipEmptyParts);
+#endif
 }
 
 
@@ -549,7 +553,7 @@ EntityItemPointer EntityTree::addEntity(const EntityItemID& entityID, const Enti
 
     if (properties.getEntityHostType() == entity::HostType::DOMAIN && getIsClient() &&
         !nodeList->getThisNodeCanRez() && !nodeList->getThisNodeCanRezTmp() &&
-        !nodeList->getThisNodeCanRezCertified() && !nodeList->getThisNodeCanRezTmpCertified() && 
+        !nodeList->getThisNodeCanRezCertified() && !nodeList->getThisNodeCanRezTmpCertified() &&
         !_serverlessDomain && !isClone && !isImport) {
         return nullptr;
     }
@@ -1457,8 +1461,8 @@ void EntityTree::addCertifiedEntityOnServer(EntityItemPointer entity) {
     if (!existingEntityItemID.isNull()) {
         qCDebug(entities) << "Certificate ID" << certID << "already exists on entity with ID"
             << existingEntityItemID << ". No action will be taken to remove it.";
-        // FIXME: All certificate checking needs to be moved to its own files, 
-        // then the deletion settings need to have a toggle for domain owners 
+        // FIXME: All certificate checking needs to be moved to its own files,
+        // then the deletion settings need to have a toggle for domain owners
         // and a setting to change the verification service provider.
         // withWriteLock([&] {
         //     deleteEntity(existingEntityItemID, true);
@@ -1537,8 +1541,8 @@ void EntityTree::startDynamicDomainVerificationOnServer(float minimumAgeToRemove
                 }
                 qCDebug(entities) << "Entity's cert's domain ID" << jsonObject["domain_id"].toString()
                     << "doesn't match the current Domain ID" << thisDomainID << ". No action will be taken to remove it: " << entityID;
-                // FIXME: All certificate checking needs to be moved to its own files, 
-                // then the deletion settings need to have a toggle for domain owners 
+                // FIXME: All certificate checking needs to be moved to its own files,
+                // then the deletion settings need to have a toggle for domain owners
                 // and a setting to change the verification service provider.
                 // withWriteLock([&] {
                 //     deleteEntity(entityID, true);
@@ -1568,8 +1572,8 @@ void EntityTree::startChallengeOwnershipTimer(const EntityItemID& entityItemID) 
     });
     connect(_challengeOwnershipTimeoutTimer, &QTimer::timeout, this, [=]() {
         qCDebug(entities) << "Ownership challenge timed out for entity " << entityItemID << ". No action will be taken to remove it.";
-        // FIXME: All certificate checking needs to be moved to its own files, 
-        // then the deletion settings need to have a toggle for domain owners 
+        // FIXME: All certificate checking needs to be moved to its own files,
+        // then the deletion settings need to have a toggle for domain owners
         // and a setting to change the verification service provider.
         // withWriteLock([&] {
         //     deleteEntity(entityItemID, true);
@@ -1602,7 +1606,7 @@ bool EntityTree::verifyNonce(const EntityItemID& entityID, const QString& nonce)
         key = sent.second;
     }
 
-    QString annotatedKey = "-----BEGIN PUBLIC KEY-----\n" + key.insert(64, "\n") + "\n-----END PUBLIC KEY-----\n"; 
+    QString annotatedKey = "-----BEGIN PUBLIC KEY-----\n" + key.insert(64, "\n") + "\n-----END PUBLIC KEY-----\n";
     QByteArray hashedActualNonce = QCryptographicHash::hash(QByteArray(actualNonce.toUtf8()), QCryptographicHash::Sha256);
     bool verificationSuccess = EntityItemProperties::verifySignature(annotatedKey.toUtf8(), hashedActualNonce, QByteArray::fromBase64(nonce.toUtf8()));
 
@@ -1666,8 +1670,8 @@ void EntityTree::sendChallengeOwnershipPacket(const QString& certID, const QStri
 
     if (text == "") {
         qCDebug(entities) << "CRITICAL ERROR: Couldn't compute nonce. No action will be taken to remove this entity.";
-        // FIXME: All certificate checking needs to be moved to its own files, 
-        // then the deletion settings need to have a toggle for domain owners 
+        // FIXME: All certificate checking needs to be moved to its own files,
+        // then the deletion settings need to have a toggle for domain owners
         // and a setting to change the verification service provider.
         // withWriteLock([&] {
         //     deleteEntity(entityItemID, true);
@@ -1743,16 +1747,16 @@ void EntityTree::validatePop(const QString& certID, const EntityItemID& entityIt
         if (networkReply->error() == QNetworkReply::NoError) {
             if (!jsonObject["invalid_reason"].toString().isEmpty()) {
                 qCDebug(entities) << "invalid_reason not empty, no action will be taken to delete entity" << entityItemID;
-                // FIXME: All certificate checking needs to be moved to its own files, 
-                // then the deletion settings need to have a toggle for domain owners 
+                // FIXME: All certificate checking needs to be moved to its own files,
+                // then the deletion settings need to have a toggle for domain owners
                 // and a setting to change the verification service provider.
                 // withWriteLock([&] {
                 //     deleteEntity(entityItemID, true);
                 // });
             } else if (jsonObject["transfer_status"].toArray().first().toString() == "failed") {
                 qCDebug(entities) << "'transfer_status' is 'failed', no action will be taken to delete entity" << entityItemID;
-                // FIXME: All certificate checking needs to be moved to its own files, 
-                // then the deletion settings need to have a toggle for domain owners 
+                // FIXME: All certificate checking needs to be moved to its own files,
+                // then the deletion settings need to have a toggle for domain owners
                 // and a setting to change the verification service provider.
                 // withWriteLock([&] {
                 //     deleteEntity(entityItemID, true);
@@ -1768,8 +1772,8 @@ void EntityTree::validatePop(const QString& certID, const EntityItemID& entityIt
         } else {
             qCDebug(entities) << "Call to" << networkReply->url() << "failed with error" << networkReply->error() << "; no action will be taken to delete entity" << entityItemID
                 << "More info:" << jsonObject;
-            // FIXME: All certificate checking needs to be moved to its own files, 
-            // then the deletion settings need to have a toggle for domain owners 
+            // FIXME: All certificate checking needs to be moved to its own files,
+            // then the deletion settings need to have a toggle for domain owners
             // and a setting to change the verification service provider.
             // withWriteLock([&] {
             //     deleteEntity(entityItemID, true);
@@ -2079,7 +2083,7 @@ int EntityTree::processEditPacketData(ReceivedMessage& message, const unsigned c
                         if (newEntity) {
                             newEntity->markAsChangedOnServer();
                             notifyNewlyCreatedEntity(*newEntity, senderNode);
-                            
+
                             startLogging = usecTimestampNow();
                             if (wantEditLogging()) {
                                 qCDebug(entities) << "User [" << senderNode->getUUID() << "] added entity. ID:"
@@ -2104,7 +2108,7 @@ int EntityTree::processEditPacketData(ReceivedMessage& message, const unsigned c
                     }
                 } else {
                     HIFI_FCDEBUG(entities(), "Edit failed. [" << message.getType() <<"] " <<
-                            "entity id:" << entityItemID << 
+                            "entity id:" << entityItemID <<
                             "existingEntity pointer:" << existingEntity.get());
                 }
             }
@@ -2362,7 +2366,7 @@ bool EntityTree::hasEntitiesDeletedSince(quint64 sinceTime) {
     if (hasSomethingNewer) {
         int elapsed = usecTimestampNow() - considerEntitiesSince;
         int difference = considerEntitiesSince - sinceTime;
-        qCDebug(entities) << "EntityTree::hasEntitiesDeletedSince() sinceTime:" << sinceTime 
+        qCDebug(entities) << "EntityTree::hasEntitiesDeletedSince() sinceTime:" << sinceTime
                     << "considerEntitiesSince:" << considerEntitiesSince << "elapsed:" << elapsed << "difference:" << difference;
     }
 #endif
