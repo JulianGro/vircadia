@@ -139,7 +139,7 @@ endif()
             if self.version == "5.15.2":
                 self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.15.2-macos.tar.gz'
             else:
-                self.version = "5.12.2"
+                self.version = "5.12.3"
                 self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.12.3-macos.tar.gz%3FversionId=bLAgnoJ8IMKpqv8NFDcAu8hsyQy3Rwwz'
 
         elif 'Linux' == system:
@@ -152,7 +152,12 @@ endif()
                     u_minor = int( distro.minor_version() )
 
                     if u_major == 18:
-                        self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz'
+                        if self.version == "5.15.2":
+                            self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz'
+                        else:
+                            self.version = "5.12.3"
+                            self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.12.3-ubuntu-18.04.tar.gz'
+
                     elif u_major > 19:
                         self.__no_qt_package_error()
                     else:
