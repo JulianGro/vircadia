@@ -110,7 +110,7 @@ public:
 
 private:
 #if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    (Node(const Node &otherNode);
+    Node(const Node &otherNode);
     Node& operator=(Node otherNode);
 #else
     Q_DISABLE_COPY(Node)
