@@ -149,14 +149,14 @@ endif()
             if 'x86_64' == cpu_architecture:
                 u_major = int( distro.major_version() )
                 u_minor = int( distro.minor_version() )
-                if (distro.id() == 'ubuntu' && u_major == 18) || distro.id() == 'linuxmint' && u_major == 19:
+                if (distro.id() == 'ubuntu' and u_major == 18) or distro.id() == 'linuxmint' and u_major == 19:
                     if self.version == "5.15.2":
                         self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.15.2-ubuntu-18.04-amd64.tar.xz'
                     else:
                         self.version = "5.12.3"
                         self.qtUrl = self.assets_url + '/dependencies/vcpkg/qt5-install-5.12.3-ubuntu-18.04.tar.gz'
 
-                elif (distro.id() == 'ubuntu' && u_major > 18) || (distro.id() == 'linuxmint' && u_major > 19):
+                elif (distro.id() == 'ubuntu' and u_major > 18) or (distro.id() == 'linuxmint' and u_major > 19):
                     self.__no_qt_package_error()
                 else:
                     self.__unsupported_error()
