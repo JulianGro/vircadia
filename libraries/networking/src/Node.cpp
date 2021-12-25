@@ -120,7 +120,7 @@ Node::Node(const QUuid& uuid, NodeType_t type, const SockAddr& publicSocket,
 
 void Node::setType(char type) {
     _type = type;
-    
+
     auto typeString = NodeType::getNodeTypeName(type);
     _publicSocket.setObjectName(typeString);
     _localSocket.setObjectName(typeString);
@@ -193,7 +193,7 @@ bool Node::isIgnoringNodeWithID(const QUuid& nodeID) const {
     return std::find(_ignoredNodeIDs.begin(), _ignoredNodeIDs.end(), nodeID) != _ignoredNodeIDs.end();
 }
 
-QDataStream& operator<<(QDataStream& out, const Node& node) {
+QDataStream& operator<<(const Node& node, QDataStream& out) {
     out << node._type;
     out << node._uuid;
     out << node._publicSocket.getType();
