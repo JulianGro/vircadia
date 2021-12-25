@@ -29,7 +29,7 @@ enum class SocketType : uint8_t {
 /// @return The name of the SocketType value.
 static QString socketTypeToString(SocketType socketType) {
     static QStringList SOCKET_TYPE_STRINGS { "Unknown", "UDP", "WebRTC" };
-    return SOCKET_TYPE_STRINGS[(uint8_t)socketType];
+    return SOCKET_TYPE_STRINGS[socketType];
 }
 
 
