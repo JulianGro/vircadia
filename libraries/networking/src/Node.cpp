@@ -193,7 +193,7 @@ bool Node::isIgnoringNodeWithID(const QUuid& nodeID) const {
     return std::find(_ignoredNodeIDs.begin(), _ignoredNodeIDs.end(), nodeID) != _ignoredNodeIDs.end();
 }
 
-QDataStream& operator<<(const Node& node, QDataStream& out) {
+QDataStream& operator<<(QDataStream& out, const Node& node) {
     out << node._type;
     out << node._uuid;
     out << node._publicSocket.getType();
