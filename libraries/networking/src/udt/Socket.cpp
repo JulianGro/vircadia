@@ -28,6 +28,7 @@
 #include "../NLPacket.h"
 #include "../NLPacketList.h"
 #include "PacketList.h"
+#include "../SocketType.h"
 #include <Trace.h>
 
 using namespace udt;
@@ -106,13 +107,13 @@ void Socket::setSystemBufferSizes(SocketType socketType) {
 
         if (i == 0) {
             bufferOpt = QAbstractSocket::SendBufferSizeSocketOption;
-            numBytes = socketType == SocketType::UDP 
+            numBytes = socketType == SocketType::UDP
                 ? udt::UDP_SEND_BUFFER_SIZE_BYTES : udt::WEBRTC_SEND_BUFFER_SIZE_BYTES;
             bufferTypeString = "send";
 
         } else {
             bufferOpt = QAbstractSocket::ReceiveBufferSizeSocketOption;
-            numBytes = socketType == SocketType::UDP 
+            numBytes = socketType == SocketType::UDP
                 ? udt::UDP_RECEIVE_BUFFER_SIZE_BYTES : udt::WEBRTC_RECEIVE_BUFFER_SIZE_BYTES;
             bufferTypeString = "receive";
         }
@@ -559,8 +560,8 @@ void Socket::handleSocketError(SocketType socketType, QAbstractSocket::SocketErr
 #endif
     int pending = _networkSocket.bytesToWrite(socketType);
     QString errorString;
-    QDebug(&errorString) << "udt::Socket (" << socketTypeToString(socketType) << _networkSocket.state(socketType) 
-        << ") error - " << wsaError << socketError << "(" << _networkSocket.errorString(socketType) << ")" 
+    QDebug(&errorString) << "udt::Socket (" << socketTypeToString(socketType) << _networkSocket.state(socketType)
+        << ") error - " << wsaError << socketError << "(" << _networkSocket.errorString(socketType) << ")"
         << (pending ? "pending bytes:" : "pending:") << pending;
 
     if (previousWsaError.exchange(wsaError) != wsaError) {
