@@ -112,8 +112,8 @@ private:
 #if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
     //(Node(const Node &otherNode);
     //Node& operator=(Node otherNode);
-    //Node(const Node&) = delete;
-    //Node(Node const&) = delete;
+    Node(const Node&) = delete;
+    Node(Node const&) = delete;
 #else
     Q_DISABLE_COPY(Node)
 #endif
