@@ -196,9 +196,9 @@ bool Node::isIgnoringNodeWithID(const QUuid& nodeID) const {
 QDataStream& operator<<(QDataStream& out, const Node& node) {
     out << node._type;
     out << node._uuid;
-    //out << node._publicSocket.getType();
+    out << node._publicSocket.getType();
     out << node._publicSocket;
-    //out << node._localSocket.getType();
+    out << node._localSocket.getType();
     out << node._localSocket;
     out << node._permissions;
     out << node._isReplicated;
