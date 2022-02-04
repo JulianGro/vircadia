@@ -22,7 +22,7 @@
 #include "SequenceNumber.h"
 
 namespace udt {
-    
+
 static const int32_t DEFAULT_SYN_INTERVAL = 10000; // 10 ms
 
 class Connection;
@@ -64,12 +64,7 @@ protected:
     SequenceNumber _sendCurrSeqNum; // current maximum seq num sent out
 
 private:
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    CongestionControl(const CongestionControl& other) = delete;
-    CongestionControl& operator=(const CongestionControl& other) = delete;
-#else
     Q_DISABLE_COPY(CongestionControl);
-#endif
 };
 
 
@@ -85,7 +80,7 @@ public:
     virtual ~CongestionControlFactory() {}
     virtual std::unique_ptr<CongestionControl> create() override { return std::unique_ptr<T>(new T()); }
 };
-    
+
 }
 
 #endif // hifi_CongestionControl_h
