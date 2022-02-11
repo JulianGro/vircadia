@@ -8,9 +8,10 @@
 //
 
 #include "UserInputMapper.h"
-#include "QtCompatibility.h"
 
 #include <set>
+
+#include "QtCompatibility.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QFile>

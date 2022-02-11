@@ -25,6 +25,8 @@
 
 #include <gl/Config.h>
 
+#include "QtCompatibility.h"
+
 #include <QtCore/QResource>
 #include <QtCore/QAbstractNativeEventFilter>
 #include <QtCore/QCommandLineParser>
