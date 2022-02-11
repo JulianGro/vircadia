@@ -8,6 +8,7 @@
 //
 
 #include "UserInputMapper.h"
+#include "QtCompatibility.h"
 
 #include <set>
 
