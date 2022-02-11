@@ -8,6 +8,7 @@
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
 //
 
+#include <QtGlobal>
 
 // Compatibility with Qt < 5.13
 #ifndef Q_DISABLE_COPY
