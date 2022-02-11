@@ -12,6 +12,7 @@
 //
 
 #include "EntityTree.h"
+#include "QtCompatibility.h"
 #include <QtCore/QDateTime>
 #include <QtCore/QQueue>
 #include <openssl/err.h>
