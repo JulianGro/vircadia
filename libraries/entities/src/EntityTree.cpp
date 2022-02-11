@@ -5,6 +5,7 @@
 //  Created by Brad Hefta-Gaub on 12/4/13.
 //  Copyright 2013 High Fidelity, Inc.
 //  Copyright 2020 Vircadia contributors.
+//  Copyright 2020 Vircadia contributors.
 //
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
@@ -68,11 +69,7 @@ EntityTree::~EntityTree() {
 }
 
 void EntityTree::setEntityScriptSourceWhitelist(const QString& entityScriptSourceWhitelist) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', QString::SkipEmptyParts);
-#else
-    _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', Qt::SkipEmptyParts);
-#endif
+    _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', oSkipEmptyParts);
 }
 
 

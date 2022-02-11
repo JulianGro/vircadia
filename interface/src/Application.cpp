@@ -5,6 +5,7 @@
 //  Created by Andrzej Kapolka on 5/10/13.
 //  Copyright 2013 High Fidelity, Inc.
 //  Copyright 2020 Vircadia contributors.
+//  Copyright 2022 Overte e.V.
 //
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
@@ -3261,20 +3262,12 @@ void Application::initializeUi() {
         auto newValidator = [=](const QUrl& url) -> bool {
             QString whitelistPrefix = "[WHITELIST ENTITY SCRIPTS]";
             QList<QString> safeURLS = { "" };
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-            safeURLS += qEnvironmentVariable("EXTRA_WHITELIST").trimmed().split(QRegExp("\\s*,\\s*"), QString::SkipEmptyParts);
-#else
-            safeURLS += qEnvironmentVariable("EXTRA_WHITELIST").trimmed().split(QRegExp("\\s*,\\s*"), Qt::SkipEmptyParts);
-#endif
+            safeURLS += qEnvironmentVariable("EXTRA_WHITELIST").trimmed().split(QRegExp("\\s*,\\s*"), oSkipEmptyParts);
 
             // PULL SAFEURLS FROM INTERFACE.JSON Settings
 
             QVariant raw = Setting::Handle<QVariant>("private/settingsSafeURLS").get();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-            QStringList settingsSafeURLS = raw.toString().trimmed().split(QRegExp("\\s*[,\r\n]+\\s*"), QString::SkipEmptyParts);
-#else
-            QStringList settingsSafeURLS = raw.toString().trimmed().split(QRegExp("\\s*[,\r\n]+\\s*"), Qt::SkipEmptyParts);
-#endif
+            QStringList settingsSafeURLS = raw.toString().trimmed().split(QRegExp("\\s*[,\r\n]+\\s*"), oSkipEmptyParts);
             safeURLS += settingsSafeURLS;
 
             // END PULL SAFEURLS FROM INTERFACE.JSON Settings
@@ -8851,31 +8844,19 @@ void Application::initPlugins(const QStringList& arguments) {
     parser.parse(arguments);
 
     if (parser.isSet(display)) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-        auto preferredDisplays = parser.value(display).split(',', QString::SkipEmptyParts);
-#else
-        auto preferredDisplays = parser.value(display).split(',', Qt::SkipEmptyParts);
-#endif
+        auto preferredDisplays = parser.value(display).split(',', oSkipEmptyParts);
         qInfo() << "Setting prefered display plugins:" << preferredDisplays;
         PluginManager::getInstance()->setPreferredDisplayPlugins(preferredDisplays);
     }
 
     if (parser.isSet(disableDisplays)) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-        auto disabledDisplays = parser.value(disableDisplays).split(',', QString::SkipEmptyParts);
-#else
-        auto disabledDisplays = parser.value(disableDisplays).split(',', Qt::SkipEmptyParts);
-#endif
+        auto disabledDisplays = parser.value(disableDisplays).split(',', oSkipEmptyParts);
         qInfo() << "Disabling following display plugins:"  << disabledDisplays;
         PluginManager::getInstance()->disableDisplays(disabledDisplays);
     }
 
     if (parser.isSet(disableInputs)) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-        auto disabledInputs = parser.value(disableInputs).split(',', QString::SkipEmptyParts);
-#else
-        auto disabledInputs = parser.value(disableInputs).split(',', Qt::SkipEmptyParts);
-#endif
+        auto disabledInputs = parser.value(disableInputs).split(',', oSkipEmptyParts);
         qInfo() << "Disabling following input plugins:" << disabledInputs;
         PluginManager::getInstance()->disableInputs(disabledInputs);
     }

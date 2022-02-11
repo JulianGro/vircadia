@@ -1,6 +1,7 @@
 //
 //  Created by Sam Gateau on 4/27/15.
 //  Copyright 2015 High Fidelity, Inc.
+//  Copyright 2022 Overte e.V.
 //
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
@@ -738,11 +739,7 @@ Mapping::Pointer UserInputMapper::newMapping(const QString& mappingName) {
 //        if (request->getResult() == ResourceRequest::Success) {
 //            result = parseMapping(QString(request->getData()));
 //        } else {
-// #if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-//            qCWarning(controllers) << "Failed to load mapping url <" << jsonUrl << ">" << endl;
-// #else
-//            qCWarning(controllers) << "Failed to load mapping url <" << jsonUrl << ">" << Qt::endl;
-// #endif
+//            qCWarning(controllers) << "Failed to load mapping url <" << jsonUrl << ">" << oEndl;
 //        }
 //        request->deleteLater();
 //    }
@@ -1181,22 +1178,13 @@ Mapping::Pointer UserInputMapper::parseMapping(const QString& json) {
     if (doc.isNull()) {
         qCDebug(controllers) << "Invalid JSON...\n";
         qCDebug(controllers) << error.errorString();
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-        qCDebug(controllers) << "JSON was:\n" << json << endl;
-#else
-        qCDebug(controllers) << "JSON was:\n" << json << Qt::endl;
-#endif
+        qCDebug(controllers) << "JSON was:\n" << json << oEndl;
         return Mapping::Pointer();
     }
 
     if (!doc.isObject()) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-        qWarning() << "Mapping json Document is not an object" << endl;
-        qCDebug(controllers) << "JSON was:\n" << json << endl;
-#else
-        qWarning() << "Mapping json Document is not an object" << Qt::endl;
-        qCDebug(controllers) << "JSON was:\n" << json << Qt::endl;
-#endif
+        qWarning() << "Mapping json Document is not an object" << oEndl;
+        qCDebug(controllers) << "JSON was:\n" << json << oEndl;
         return Mapping::Pointer();
     }
     return parseMapping(doc.object());

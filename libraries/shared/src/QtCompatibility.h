@@ -15,3 +15,43 @@
         className(const className &) = delete;\
         className &operator=(const className &) = delete;
 #endif
+
+// Compatibility with Qt < 5.15
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    #define oEndl endl
+#else
+    #define oEndl Qt::endl
+#endif
+
+// Compatibility with Qt < 5.15
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    #define oKeepEmptyParts QString::KeepEmptyParts
+#else
+    #define oKeepEmptyParts Qt::KeepEmptyParts
+#endif
+
+// Compatibility with Qt < 5.15
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    #define oSplitBehavior QString::SplitBehavior
+#else
+    #define oSplitBehavior Qt::SplitBehavior
+#endif
+
+// TODO
+//#ifndef QRecursiveMutex
+//    #define QMutex _changeCursorLock { QMutex::Recursive };
+
+//#endif
+
+//#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+//    mutable QMutex _changeCursorLock { QMutex::Recursive };
+//#else
+//    mutable QRecursiveMutex _changeCursorLock;
+//#endif
+
+// TODO
+//#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+//            output.edit0() = hfmModelIn->meshes.toStdVector();
+//#else
+//            output.edit0() = std::vector<hfm::Mesh>(hfmModelIn->meshes.begin(), hfmModelIn->meshes.end());
+//#endif
