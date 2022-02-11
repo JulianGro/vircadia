@@ -21,6 +21,7 @@
 #include <mutex>
 #include <unordered_map>
 
+#include "QtCompatibility.h"
 #include <QtCore/QObject>
 #include <QtCore/QReadWriteLock>
 
