@@ -90,12 +90,7 @@ private slots:
     void run();
 
 private:
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    SendQueue(SendQueue& other) = delete;
-    SendQueue(SendQueue&& other) = delete;
-#else
     Q_DISABLE_COPY_MOVE(SendQueue)
-#endif
     SendQueue(Socket* socket, SockAddr dest, SequenceNumber currentSequenceNumber,
               MessageNumber currentMessageNumber, bool hasReceivedHandshakeACK);
 
