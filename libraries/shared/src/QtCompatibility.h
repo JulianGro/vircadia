@@ -16,6 +16,13 @@
         className &operator=(const className &) = delete;
 #endif
 
+// Compatibility with Qt < 5.13
+#ifndef Q_DISABLE_COPY_MOVE
+    #define Q_DISABLE_COPY_MOVE(className) \
+        className(className & other) = delete;\
+        className(className && other) = delete;
+#endif
+
 // Compatibility with Qt < 5.15
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     #define oEndl endl
@@ -63,10 +70,5 @@
 //            output.edit0() = std::vector<hfm::Mesh>(hfmModelIn->meshes.begin(), hfmModelIn->meshes.end());
 //#endif
 
-// Compatibility with Qt < 5.13
-#ifndef Q_DISABLE_COPY_MOVE
-    #define Q_DISABLE_COPY_MOVE(className) \
-        className(className& other) = delete;\
-        className(className&& other) = delete;
-#endif
+
 
