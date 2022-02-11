@@ -37,6 +37,13 @@
     #define oSplitBehavior Qt::SplitBehavior
 #endif
 
+// Compatibility with Qt < 5.15
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    #define oSkipEmptyParts QString::SkipEmptyParts
+#else
+    #define oSkipEmptyParts Qt::SkipEmptyParts
+#endif
+
 // TODO
 //#ifndef QRecursiveMutex
 //    #define QMutex _changeCursorLock { QMutex::Recursive };
