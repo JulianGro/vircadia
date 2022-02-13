@@ -53,9 +53,9 @@
 #endif
 
 // TODO
-#ifndef QRecursiveMutex
-    #define QRecursiveMutex privateVariable  QMutex privateVariable { QMutex::Recursive }
-#endif
+//#ifndef QRecursiveMutex
+//    #define QRecursiveMutex privateVariable  QMutex privateVariable { QMutex::Recursive }
+//#endif
 
 //#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
 //    mutable QMutex _changeCursorLock { QMutex::Recursive };
@@ -70,7 +70,7 @@
 //            output.edit0() = std::vector<hfm::Mesh>(hfmModelIn->meshes.begin(), hfmModelIn->meshes.end());
 //#endif
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    #define _mutex() _mutex(QMutex::Recursive)
-#endif
+//#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+//    #define _mutex() _mutex(QMutex::Recursive)
+//#endif
 
