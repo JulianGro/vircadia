@@ -649,7 +649,7 @@ private:
     EntityTreePointer _entityClipboard;
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    mutable QMutex _viewMutex { QMutex::Recursive };
+    mutable QMutex { QMutex::Recursive } _viewMutex;
 #else
     mutable QRecursiveMutex _viewMutex;
 #endif
