@@ -13,7 +13,7 @@
 #ifndef hifi_FileUtils_h
 #define hifi_FileUtils_h
 
-#include "QtCompatibility.h"
+#include "../QtCompatibility.h"
 #include <QtCore/QString>
 
 class FileUtils {
