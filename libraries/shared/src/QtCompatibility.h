@@ -53,9 +53,9 @@
 #endif
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    #define QTCOMPAT_DECLARE_RECURSIVE_MUTEX(name) mutable QMutex name { QMutex::Recursive }
+    #define QTCOMPAT_DECLARE_RECURSIVE_MUTEX(name) QMutex name { QMutex::Recursive }
 #else
-    #define QTCOMPAT_DECLARE_RECURSIVE_MUTEX(name) mutable QRecursiveMutex  name
+    #define QTCOMPAT_DECLARE_RECURSIVE_MUTEX(name) QRecursiveMutex  name
 #endif
 
 // TODO
