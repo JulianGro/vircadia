@@ -90,11 +90,7 @@ protected:
     void callUpdateOnEntitiesThatNeedIt(uint64_t now);
     virtual void sortEntitiesThatMoved();
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    QMutex _mutex{ QMutex::Recursive };
-#else
     QRecursiveMutex _mutex;
-#endif
 
     SetOfEntities _entitiesToSort; // entities moved by simulation (and might need resort in EntityTree)
     SetOfEntities _simpleKinematicEntities; // entities undergoing non-colliding kinematic motion

@@ -54,8 +54,7 @@
 
 // TODO
 #ifndef QRecursiveMutex
-    #define QRecursiveMutex privateVariable  QMutex privateVariable { QMutex::Recursive };
-
+    #define QRecursiveMutex privateVariable  QMutex privateVariable { QMutex::Recursive }
 #endif
 
 //#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
@@ -72,6 +71,6 @@
 //#endif
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    #define _mutex() _mutex(QMutex::Recursive);
+    #define _mutex() _mutex(QMutex::Recursive)
 #endif
 
