@@ -15,7 +15,7 @@
 
 #include <mutex>
 
-#include "QtCompatibility.h"
+#include "../QtCompatibility.h"
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
