@@ -16,7 +16,7 @@
 
 #include <functional>
 
-#include "../QtCompatibility.h"
+#include "QtCompatibility.h"
 #include <QtCore/QHash>
 #include <QtCore/QPointer>
 #include <QtCore/QSet>
