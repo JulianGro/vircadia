@@ -1639,7 +1639,7 @@ std::set<unsigned int> Model::getMeshIDsFromMaterialID(QString parentMaterialNam
         };
 
         if (parentMaterialName.length() > 2 && parentMaterialName.startsWith("[") && parentMaterialName.endsWith("]")) {
-            QStringList list = parentMaterialName.split(",", oSkipEmptyParts);
+            QStringList list = parentMaterialName.split(",", QTCOMPAT_SKIP_EMPTY_PARTS);
 
             for (int i = 0; i < list.length(); i++) {
                 auto& target = list[i];

@@ -71,7 +71,7 @@ EntityTree::~EntityTree() {
 }
 
 void EntityTree::setEntityScriptSourceWhitelist(const QString& entityScriptSourceWhitelist) {
-    _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', oSkipEmptyParts);
+    _entityScriptSourceWhitelist = entityScriptSourceWhitelist.split(',', QTCOMPAT_SKIP_EMPTY_PARTS);
 }
 
 

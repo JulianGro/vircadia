@@ -60,7 +60,7 @@ void AssetResourceRequest::doSend() {
     // We'll either have a hash or an ATP path to a file (that maps to a hash)
     if (urlIsAssetHash(_url)) {
         // We've detected that this is a hash - simply use AssetClient to request that asset
-        auto parts = _url.path().split(".", oSkipEmptyParts);
+        auto parts = _url.path().split(".", QTCOMPAT_SKIP_EMPTY_PARTS);
         auto hash = parts.length() > 0 ? parts[0] : "";
 
         requestHash(hash);

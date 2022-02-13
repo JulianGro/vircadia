@@ -26,42 +26,37 @@
 
 // Compatibility with Qt < 5.15
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    #define oEndl endl
+    #define QTCOMPAT_ENDL endl
 #else
-    #define oEndl Qt::endl
+    #define QTCOMPAT_ENDL Qt::endl
 #endif
 
 // Compatibility with Qt < 5.15
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    #define oKeepEmptyParts QString::KeepEmptyParts
+    #define QTCOMPAT_KEEP_EMPTY_PARTS QString::KeepEmptyParts
 #else
-    #define oKeepEmptyParts Qt::KeepEmptyParts
+    #define QTCOMPAT_KEEP_EMPTY_PARTS Qt::KeepEmptyParts
 #endif
 
 // Compatibility with Qt < 5.15
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    #define oSplitBehavior QString::SplitBehavior
+    #define QTCOMPAT_SPLIT_BEHAVIOR QString::SplitBehavior
 #else
-    #define oSplitBehavior Qt::SplitBehavior
+    #define QTCOMPAT_SPLIT_BEHAVIOR Qt::SplitBehavior
 #endif
 
 // Compatibility with Qt < 5.15
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-    #define oSkipEmptyParts QString::SkipEmptyParts
+    #define QTCOMPAT_SKIP_EMPTY_PARTS QString::SkipEmptyParts
 #else
-    #define oSkipEmptyParts Qt::SkipEmptyParts
+    #define QTCOMPAT_SKIP_EMPTY_PARTS Qt::SkipEmptyParts
 #endif
 
-// TODO
-//#ifndef QRecursiveMutex
-//    #define QRecursiveMutex privateVariable  QMutex privateVariable { QMutex::Recursive }
-//#endif
-
-//#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-//    mutable QMutex _changeCursorLock { QMutex::Recursive };
-//#else
-//    mutable QRecursiveMutex _changeCursorLock;
-//#endif
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
+    #define QTCOMPAT_DECLARE_RECURSIVE_MUTEX(name) mutable QMutex name { QMutex::Recursive }
+#else
+    #define QTCOMPAT_DECLARE_RECURSIVE_MUTEX(name) mutable QRecursiveMutex  name
+#endif
 
 // TODO
 //#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))

@@ -69,8 +69,8 @@ QString FileUtils::readFile(const QString& filename) {
     return result;
 }
 
-QStringList FileUtils::readLines(const QString& filename, oSplitBehavior splitBehavior) {
-    return readFile(filename).split(QRegularExpression("[\\r\\n]"), oSkipEmptyParts);
+QStringList FileUtils::readLines(const QString& filename, QTCOMPAT_SPLIT_BEHAVIOR splitBehavior) {
+    return readFile(filename).split(QRegularExpression("[\\r\\n]"), QTCOMPAT_SKIP_EMPTY_PARTS);
 }
 
 void FileUtils::locateFile(const QString& filePath) {
