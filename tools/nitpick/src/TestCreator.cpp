@@ -3,6 +3,7 @@
 //
 //  Created by Nissim Hadar on 2 Nov 2017.
 //  Copyright 2013 High Fidelity, Inc.
+//  Copyright 2022 Overte e.V.
 //
 //  Distributed under the Apache License, Version 2.0.
 //  See the accompanying file LICENSE or http://www.apache.org/licenses/LICENSE-2.0.html
@@ -10,6 +11,7 @@
 #include "TestCreator.h"
 
 #include <assert.h>
+#include "QtCompatibility.h"
 #include <QtCore/QTextStream>
 #include <QDirIterator>
 #include <QHostInfo>
@@ -207,20 +209,11 @@ void TestCreator::appendTestResultsToFile(const TestResult& testResult, const QP
 
     // Create text file describing the failure
     QTextStream stream(&descriptionFile);
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    stream << "TestCreator in folder " << testResult._pathname.left(testResult._pathname.length() - 1) << endl; // remove trailing '/'
-    stream << "Expected image was    " << testResult._expectedImageFilename << endl;
-    stream << "Actual image was      " << testResult._actualImageFilename << endl;
-    stream << "Similarity index was  " << testResult._errorGlobal << endl;
-    stream << "Worst tile was  " << testResult._errorLocal << endl;
-#else
-    stream << "TestCreator in folder " << testResult._pathname.left(testResult._pathname.length() - 1) << Qt::endl; // remove trailing '/'
-    stream << "Expected image was    " << testResult._expectedImageFilename << Qt::endl;
-    stream << "Actual image was      " << testResult._actualImageFilename << Qt::endl;
-    stream << "Similarity index was  " << testResult._errorGlobal << Qt::endl;
-    stream << "Worst tile was  " << testResult._errorLocal << Qt::endl;
-#endif
-
+    stream << "TestCreator in folder " << testResult._pathname.left(testResult._pathname.length() - 1) << oEndl; // remove trailing '/'
+    stream << "Expected image was    " << testResult._expectedImageFilename << oEndl;
+    stream << "Actual image was      " << testResult._actualImageFilename << oEndl;
+    stream << "Similarity index was  " << testResult._errorGlobal << oEndl;
+    stream << "Worst tile was  " << testResult._errorLocal << oEndl;
 
     descriptionFile.close();
 
@@ -424,11 +417,7 @@ void TestCreator::includeTest(QTextStream& textStream, const QString& testPathna
     QString partialPath = extractPathFromTestsDown(testPathname);
     QString partialPathWithoutTests = partialPath.right(partialPath.length() - 7);
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    textStream << "Script.include(testsRootPath + \"" << partialPathWithoutTests + "\");" << endl;
-#else
-    textStream << "Script.include(testsRootPath + \"" << partialPathWithoutTests + "\");" << Qt::endl;
-#endif
+    textStream << "Script.include(testsRootPath + \"" << partialPathWithoutTests + "\");" << oEndl;
 }
 
 void TestCreator::createTests(const QString& clientProfile) {
@@ -1007,73 +996,39 @@ void TestCreator::createRecursiveScript(const QString& directory, bool interacti
 
     QTextStream textStream(&recursiveTestsFile);
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    textStream << "// This is an automatically generated file, created by nitpick" << endl;
-#else
-    textStream << "// This is an automatically generated file, created by nitpick" << Qt::endl;
-#endif
+    textStream << "// This is an automatically generated file, created by nitpick" << oEndl;
 
     // Include 'nitpick.js'
     QString branch = nitpick->getSelectedBranch();
     QString user = nitpick->getSelectedUser();
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
     textStream << "PATH_TO_THE_REPO_PATH_UTILS_FILE = \"https://raw.githubusercontent.com/" + user + "/hifi_tests/" + branch +
         "/tests/utils/branchUtils.js\";"
-        << endl;
-    textStream << "Script.include(PATH_TO_THE_REPO_PATH_UTILS_FILE);" << endl << endl;
+        << oEndl;
+    textStream << "Script.include(PATH_TO_THE_REPO_PATH_UTILS_FILE);" << oEndl << oEndl;
 
     // The 'depth' variable is used to signal when to start running the recursive scripts
-    textStream << "if (typeof depth === 'undefined') {" << endl;
-    textStream << "   depth = 0;" << endl;
-    textStream << "   nitpick = createNitpick(Script.resolvePath(\".\"));" << endl;
-    textStream << "   testsRootPath = nitpick.getTestsRootPath();" << endl << endl;
-    textStream << "   nitpick.enableRecursive();" << endl;
-    textStream << "   nitpick.enableAuto();" << endl;
-    textStream << "} else {" << endl;
-    textStream << "   depth++" << endl;
-    textStream << "}" << endl << endl;
+    textStream << "if (typeof depth === 'undefined') {" << oEndl;
+    textStream << "   depth = 0;" << oEndl;
+    textStream << "   nitpick = createNitpick(Script.resolvePath(\".\"));" << oEndl;
+    textStream << "   testsRootPath = nitpick.getTestsRootPath();" << oEndl << oEndl;
+    textStream << "   nitpick.enableRecursive();" << oEndl;
+    textStream << "   nitpick.enableAuto();" << oEndl;
+    textStream << "} else {" << oEndl;
+    textStream << "   depth++" << oEndl;
+    textStream << "}" << oEndl << oEndl;
 
     // Now include the test scripts
     for (int i = 0; i < directories.length(); ++i) {
         includeTest(textStream, directories.at(i));
     }
 
-    textStream << endl;
-    textStream << "if (depth > 0) {" << endl;
-    textStream << "   depth--;" << endl;
-    textStream << "} else {" << endl;
-    textStream << "   nitpick.runRecursive();" << endl;
-    textStream << "}" << endl << endl;
-#else
-    textStream << "PATH_TO_THE_REPO_PATH_UTILS_FILE = \"https://raw.githubusercontent.com/" + user + "/hifi_tests/" + branch +
-        "/tests/utils/branchUtils.js\";"
-        << Qt::endl;
-    textStream << "Script.include(PATH_TO_THE_REPO_PATH_UTILS_FILE);" << Qt::endl << Qt::endl;
-
-    // The 'depth' variable is used to signal when to start running the recursive scripts
-    textStream << "if (typeof depth === 'undefined') {" << Qt::endl;
-    textStream << "   depth = 0;" << Qt::endl;
-    textStream << "   nitpick = createNitpick(Script.resolvePath(\".\"));" << Qt::endl;
-    textStream << "   testsRootPath = nitpick.getTestsRootPath();" << Qt::endl << Qt::endl;
-    textStream << "   nitpick.enableRecursive();" << Qt::endl;
-    textStream << "   nitpick.enableAuto();" << Qt::endl;
-    textStream << "} else {" << Qt::endl;
-    textStream << "   depth++" << Qt::endl;
-    textStream << "}" << Qt::endl << Qt::endl;
-
-    // Now include the test scripts
-    for (int i = 0; i < directories.length(); ++i) {
-        includeTest(textStream, directories.at(i));
-    }
-
-    textStream << Qt::endl;
-    textStream << "if (depth > 0) {" << Qt::endl;
-    textStream << "   depth--;" << Qt::endl;
-    textStream << "} else {" << Qt::endl;
-    textStream << "   nitpick.runRecursive();" << Qt::endl;
-    textStream << "}" << Qt::endl << Qt::endl;
-#endif
+    textStream << oEndl;
+    textStream << "if (depth > 0) {" << oEndl;
+    textStream << "   depth--;" << oEndl;
+    textStream << "} else {" << oEndl;
+    textStream << "   nitpick.runRecursive();" << oEndl;
+    textStream << "}" << oEndl << oEndl;
 
 
     recursiveTestsFile.close();
