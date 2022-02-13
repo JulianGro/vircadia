@@ -44,11 +44,7 @@ const int DIRTY_SIMULATION_FLAGS =
 
 class EntitySimulation : public QObject, public std::enable_shared_from_this<EntitySimulation> {
 public:
-#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
-    EntitySimulation() : _mutex(QMutex::Recursive), _nextExpiry(std::numeric_limits<uint64_t>::max()), _entityTree(nullptr) { }
-#else
     EntitySimulation() : _mutex(), _nextExpiry(std::numeric_limits<uint64_t>::max()), _entityTree(nullptr) { }
-#endif
     virtual ~EntitySimulation() { setEntityTree(nullptr); }
 
     inline EntitySimulationPointer getThisPointer() const {
