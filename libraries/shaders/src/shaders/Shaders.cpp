@@ -211,6 +211,11 @@ const DialectVariantSource& Source::getDialectVariantSource(Dialect dialect, Var
     return variantEntry->second;
 }
 
+const Binary& Source::getSpirv(Dialect dialect, Variant variant) const {
+    const auto& variantSource = getDialectVariantSource(dialect, variant);
+    return variantSource.spirv;
+}
+
 
 String Source::getSource(Dialect dialect, Variant variant) const {
     String result;
